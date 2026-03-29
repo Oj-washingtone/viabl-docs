@@ -1,0 +1,143 @@
+---
+title: Callout
+description: Highlight important information with contextual callout banners.
+---
+
+## Overview
+
+The `Callout` component draws attention to important information using colored banners with icons. Four semantic variants are available, each with a distinct color and icon to convey meaning at a glance.
+
+It is also available via four shorthand aliases: `Note`, `Warning`, `Tip`, and `Danger`.
+
+---
+
+## Example
+
+<Callout type="info">This is an informational callout.</Callout>
+
+<Callout type="warn">This is a warning callout.</Callout>
+
+<Callout type="error">This is an error callout.</Callout>
+
+<Callout type="success">This is a success callout.</Callout>
+
+---
+
+## Usage
+
+### Default (info)
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Callout>This is an informational callout.</Callout>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <Callout>This is an informational callout.</Callout>
+  </Tab>
+</Tabs>
+
+### Variants
+
+<Tabs>
+  <Tab title="Code">
+```mdx
+    <Callout type="info">Informational message.</Callout>
+
+    <Callout type="warn">Something might go wrong.</Callout>
+
+    <Callout type="error">Something went wrong.</Callout>
+
+    <Callout type="success">Everything looks good.</Callout>
+
+````
+  </Tab>
+  <Tab title="Output">
+    <Callout type="info">Informational message.</Callout>
+
+    <Callout type="warn">Something might go wrong.</Callout>
+
+    <Callout type="error">Something went wrong.</Callout>
+
+    <Callout type="success">Everything looks good.</Callout>
+  </Tab>
+</Tabs>
+
+### Shorthand aliases
+
+For convenience, four aliases map directly to callout variants:
+
+<Tabs>
+  <Tab title="Code">
+```mdx
+    <Note>This uses the info variant.</Note>
+
+    <Warning>This uses the warn variant.</Warning>
+
+    <Danger>This uses the error variant.</Danger>
+
+    <Tip>This uses the success variant.</Tip>
+````
+
+  </Tab>
+  <Tab title="Output">
+    <Note>This uses the info variant.</Note>
+
+    <Warning>This uses the warn variant.</Warning>
+
+    <Danger>This uses the error variant.</Danger>
+
+    <Tip>This uses the success variant.</Tip>
+
+  </Tab>
+</Tabs>
+
+### Callout with rich content
+
+Callouts support any inline MDX content:
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Note>
+      Make sure to set your `API_KEY` environment variable before running the
+      server. See the [configuration guide](/docs/configuration) for details.
+    </Note>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <Note>
+      Make sure to set your `API_KEY` environment variable before running the
+      server. See the [configuration guide](/docs/configuration) for details.
+    </Note>
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+**Callout**
+
+| Prop       | Type                                    | Required | Default  | Description                                        |
+| ---------- | --------------------------------------- | -------- | -------- | -------------------------------------------------- |
+| `type`     | `"info"` `"warn"` `"error"` `"success"` | No       | `"info"` | Controls the color scheme and icon of the callout. |
+| `children` | `React.ReactNode`                       | Yes      | —        | The content displayed inside the callout.          |
+
+**Shorthand aliases**
+
+| Component   | Equivalent                 |
+| ----------- | -------------------------- |
+| `<Note>`    | `<Callout type="info">`    |
+| `<Warning>` | `<Callout type="warn">`    |
+| `<Tip>`     | `<Callout type="success">` |
+| `<Danger>`  | `<Callout type="error">`   |
+
+---
+
+## Accessibility Notes
+
+- Callouts are rendered as `<div>` elements with no ARIA role by default. For critical alerts, consider adding `role="alert"` to the component.
+- Do not rely solely on color to convey meaning — the icon and content together provide sufficient context.
+- Avoid overusing callouts on a single page as they lose impact when too frequent.

@@ -1,0 +1,92 @@
+---
+title: Badge
+description: Small inline labels for conveying status, categories, or metadata at a glance.
+---
+
+## Overview
+
+The `Badge` component renders a compact inline label with a colored background. It is ideal for tagging content with status indicators, version labels, or categorical metadata inline with text.
+
+---
+
+## Example
+
+<Badge>Default</Badge> <Badge variant="success">Success</Badge>
+<Badge variant="warning">Warning</Badge> <Badge variant="error">Error</Badge>
+<Badge variant="info">Info</Badge>
+
+---
+
+## Usage
+
+### Variants
+
+<Tabs>
+  <Tab title="Code">
+```mdx
+    <Badge>Default</Badge>
+
+    <Badge variant="success">Success</Badge>
+
+    <Badge variant="warning">Warning</Badge>
+
+    <Badge variant="error">Error</Badge>
+
+    <Badge variant="info">Info</Badge>
+
+````
+  </Tab>
+  <Tab title="Output">
+    <Badge>Default</Badge>
+
+    <Badge variant="success">Success</Badge>
+
+    <Badge variant="warning">Warning</Badge>
+
+    <Badge variant="error">Error</Badge>
+
+    <Badge variant="info">Info</Badge>
+  </Tab>
+</Tabs>
+
+### Inline with text
+
+Badges are inline elements and sit naturally within prose:
+
+<Tabs>
+  <Tab title="Code">
+```mdx
+    This feature is <Badge variant="success">stable</Badge> and ready for production.
+
+    The `/v1/legacy` endpoint is <Badge variant="warning">deprecated</Badge> and will be removed in v3.
+
+    This method is <Badge variant="error">removed</Badge> as of version 2.0.
+````
+
+  </Tab>
+  <Tab title="Output">
+    This feature is <Badge variant="success">stable</Badge> and ready for production.
+
+    The `/v1/legacy` endpoint is <Badge variant="warning">deprecated</Badge> and will be removed in v3.
+
+    This method is <Badge variant="error">removed</Badge> as of version 2.0.
+
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+| Prop       | Type                                                   | Required | Default     | Description                                     |
+| ---------- | ------------------------------------------------------ | -------- | ----------- | ----------------------------------------------- |
+| `children` | `React.ReactNode`                                      | Yes      | —           | The text or content displayed inside the badge. |
+| `variant`  | `"default"` `"success"` `"warning"` `"error"` `"info"` | No       | `"default"` | Controls the color scheme of the badge.         |
+
+---
+
+## Accessibility Notes
+
+- Badges are rendered as `<span>` elements and are inline by nature.
+- Do not rely solely on color to convey meaning — always use descriptive text inside the badge.
+- Avoid using badges as interactive elements; they are purely presentational.

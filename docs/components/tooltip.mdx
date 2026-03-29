@@ -1,0 +1,69 @@
+---
+title: Tooltip
+description: Display additional context on hover with an inline tooltip.
+---
+
+## Overview
+
+The `Tooltip` component renders a small floating label when the user hovers over its content. It is ideal for defining terms, clarifying abbreviations, or adding supplementary information without cluttering the page.
+
+---
+
+## Example
+
+Hover over <Tooltip tip="This is the tooltip content">this text</Tooltip> to see the tooltip.
+
+---
+
+## Usage
+
+### Basic tooltip
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Tooltip tip="A reusable unit of UI">component</Tooltip>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <Tooltip tip="A reusable unit of UI">component</Tooltip>
+  </Tab>
+</Tabs>
+
+### Inline with prose
+
+Tooltips sit naturally within sentences:
+
+<Tabs>
+  <Tab title="Code">
+
+    ```mdx
+    Pass your{" "}
+    <Tooltip tip="JSON Web Token used for authentication">JWT</Tooltip> in the
+    `Authorization` header of every request.
+    ```
+
+  </Tab>
+  <Tab title="Output">
+    Pass your{" "}
+    <Tooltip tip="JSON Web Token used for authentication">JWT</Tooltip> in the
+    `Authorization` header of every request.`
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+| Prop       | Type              | Required | Description                                            |
+| ---------- | ----------------- | -------- | ------------------------------------------------------ |
+| `tip`      | `string`          | Yes      | The text displayed inside the floating tooltip label.  |
+| `children` | `React.ReactNode` | Yes      | The inline content that triggers the tooltip on hover. |
+
+---
+
+## Accessibility Notes
+
+- The trigger element uses a dashed underline and `cursor-help` to signal to users that additional information is available.
+- Tooltips are currently mouse-only and not accessible via keyboard or touch. For critical information, consider including it inline rather than hiding it in a tooltip.
+- Avoid putting interactive elements or long passages inside `tip` — keep tooltip text brief and descriptive.

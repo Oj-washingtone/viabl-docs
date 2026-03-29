@@ -1,0 +1,122 @@
+---
+title: Expandable
+description: A lightweight inline toggle for revealing additional content on demand.
+---
+
+## Overview
+
+The `Expandable` component renders a clickable text trigger that reveals hidden content below it. Unlike `Accordion`, it has no border or card container — it is designed for lightweight inline disclosure within prose, such as optional details, extended explanations, or supplementary examples.
+
+---
+
+## Example
+
+<Expandable title="Show more details">
+  This content is hidden by default and revealed when the trigger is clicked.
+  Use this for supplementary information that not every reader needs.
+</Expandable>
+
+---
+
+## Usage
+
+### Basic expandable
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Expandable title="Show more details">
+      Additional content revealed on click.
+    </Expandable>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Expandable title="Show more details">
+      Additional content revealed on click.
+    </Expandable>
+  </Tab>
+</Tabs>
+
+### Open by default
+
+Use `defaultOpen` to have the content visible on initial render:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Expandable title="Implementation notes" defaultOpen>
+      This section starts expanded so readers see it immediately.
+    </Expandable>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Expandable title="Implementation notes" defaultOpen>
+      This section starts expanded so readers see it immediately.
+    </Expandable>
+  </Tab>
+</Tabs>
+
+### With rich content
+
+Expandable content supports any valid MDX:
+
+<Tabs>
+  <Tab title="Code">
+````mdx
+    <Expandable title="See the full example">
+```ts
+      async function fetchUser(id: string) {
+        const res = await fetch(`/api/users/${id}`);
+        if (!res.ok) throw new Error("User not found");
+        return res.json();
+      }
+```
+
+    </Expandable>
+
+`````
+  </Tab>
+  <Tab title="Output">
+    <Expandable title="See the full example">
+````ts
+      async function fetchUser(id: string) {
+        const res = await fetch(`/api/users/${id}`);
+        if (!res.ok) throw new Error("User not found");
+        return res.json();
+      }
+`````
+
+    </Expandable>
+
+  </Tab>
+</Tabs>
+
+---
+
+## Expandable vs Accordion
+
+Both components reveal hidden content, but serve different purposes:
+
+|          | `Expandable`                   | `Accordion`               |
+| -------- | ------------------------------ | ------------------------- |
+| Style    | Minimal, borderless            | Bordered card             |
+| Best for | Inline prose, optional details | FAQs, structured sections |
+| Grouping | Not supported                  | Use `AccordionGroup`      |
+
+---
+
+## Props
+
+| Prop          | Type              | Required | Default | Description                                       |
+| ------------- | ----------------- | -------- | ------- | ------------------------------------------------- |
+| `title`       | `string`          | Yes      | —       | The label shown on the clickable trigger.         |
+| `children`    | `React.ReactNode` | Yes      | —       | Content revealed when the expandable is open.     |
+| `defaultOpen` | `boolean`         | No       | `false` | Whether the content is visible on initial render. |
+
+---
+
+## Accessibility Notes
+
+- The trigger is a `<button>` element and is fully keyboard accessible.
+- Use clear, action-oriented titles like "Show full example" or "View type definitions" so users know what to expect before expanding.
+- For content that is important for all readers, consider showing it inline rather than hiding it behind an expandable.

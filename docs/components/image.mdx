@@ -1,0 +1,120 @@
+---
+title: Image
+description: Display images with optional captions and automatic dark/light mode switching.
+---
+
+## Overview
+
+The `DocImage` component renders images with a styled container and optional caption. It also supports theme-aware images — you can provide separate `dark` and `light` sources that swap automatically when the user switches themes.
+
+It is also registered as the default `img` renderer, so standard markdown image syntax works out of the box.
+
+---
+
+## Example
+
+<DocImage
+  src="/images/hero-dark.png"
+  alt="An example image"
+  caption="This is a caption below the image"
+/>
+
+---
+
+## Usage
+
+### Standard markdown image
+
+Since `DocImage` is registered as the default `img` component, regular markdown syntax is rendered through it automatically:
+
+<Tabs>
+  <Tab title="Code">```mdx ![An example image](/images/hero-dark.png) ```</Tab>
+  <Tab title="Output">![An example image](/images/hero-dark.png)</Tab>
+</Tabs>
+
+### With a caption
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <DocImage
+      src="/images/hero-dark.png"
+      alt="Dashboard screenshot"
+      caption="The main dashboard showing key metrics"
+    />
+    ```
+  </Tab>
+  <Tab title="Output">
+    <DocImage
+      src="/images/hero-dark.png"
+      alt="Dashboard screenshot"
+      caption="The main dashboard showing key metrics"
+    />
+  </Tab>
+</Tabs>
+
+### Theme-aware images
+
+Provide separate `dark` and `light` sources to swap images based on the active theme:
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <DocImage
+      dark="/images/hero-dark.png"
+      light="/images/hero-light.png"
+      alt="Architecture hero-dark"
+    />
+    ```
+  </Tab>
+  <Tab title="Output">
+    <DocImage
+      dark="/images/hero-dark.png"
+      light="/images/hero-light.png"
+      alt="Architecture hero-dark"
+    />
+  </Tab>
+</Tabs>
+
+When only one of `dark` or `light` is provided, the other falls back to the base `src`:
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <DocImage
+      src="/images/diagram.png"
+      dark="/images/hero-dark.png"
+      alt="Architecture hero-dark"
+    />
+    ```
+  </Tab>
+  <Tab title="Output">
+    <DocImage
+      src="/images/hero-dark.png"
+      dark="/images/hero-dark.png"
+      alt="Architecture hero-dark"
+    />
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+| Prop      | Type     | Required | Description                                                                       |
+| --------- | -------- | -------- | --------------------------------------------------------------------------------- |
+| `src`     | `string` | No       | Default image source used when no theme-specific source is provided.              |
+| `alt`     | `string` | No       | Alt text for the image. Defaults to an empty string if omitted.                   |
+| `caption` | `string` | No       | Optional caption rendered below the image.                                        |
+| `dark`    | `string` | No       | Image source used when the dark theme is active. Falls back to `src` if not set.  |
+| `light`   | `string` | No       | Image source used when the light theme is active. Falls back to `src` if not set. |
+
+All standard HTML `<img>` attributes are also accepted and forwarded to the underlying element.
+
+---
+
+## Accessibility Notes
+
+- Always provide a meaningful `alt` value describing the image content for screen readers.
+- Use `caption` to add visible context when the image alone may not be self-explanatory.
+- Decorative images that convey no information should use `alt=""`.

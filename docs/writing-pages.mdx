@@ -1,0 +1,255 @@
+---
+title: Writing Pages
+description: Learn how to create and structure pages in your Viabl documentation.
+---
+
+Pages in Viabl are MDX files — Markdown with the ability to use React components inline. Every page lives in your project root and is registered in `docs.json` by its slug.
+
+## Creating a page
+
+Create an MDX file anywhere in your project root:
+
+```
+my-docs/
+├── docs.json
+├── introduction.mdx        ← slug: "introduction"
+├── getting-started.mdx     ← slug: "getting-started"
+└── guides/
+    └── deployment.mdx      ← slug: "guides/deployment"
+```
+
+Then register it in `docs.json`:
+
+```json
+"navigation": [
+  {
+    "group": "Getting Started",
+    "pages": ["introduction", "getting-started"]
+  },
+  {
+    "group": "Guides",
+    "pages": ["guides/deployment"]
+  }
+]
+```
+
+<Note>
+  Page slugs are relative to the project root and have no file extension. A file
+  at `guides/deployment.mdx` has the slug `guides/deployment`.
+</Note>
+
+## Frontmatter
+
+Every page should start with a frontmatter block — a YAML section between `---` delimiters. It controls the page title, description, and other metadata.
+
+```mdx
+---
+title: Getting Started
+description: Get up and running with Viabl in minutes.
+icon: Rocket
+---
+
+Your page content starts here.
+```
+
+<ResponseField name="title" type="string" required>
+  The page title. Shown in the browser tab, sidebar, and at the top of the page.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  A short description of the page. Shown below the title and used for SEO.
+</ResponseField>
+
+<ResponseField name="icon" type="string">
+  A Lucide icon name shown next to the page title. Example: `Rocket`, `Code2`,
+  `Settings`.
+</ResponseField>
+
+<ResponseField name="openapi" type="string">
+  Path to an OpenAPI spec file. When set, the page renders as an API reference
+  page.
+</ResponseField>
+
+<ResponseField name="openapiTag" type="string">
+  Filter the OpenAPI spec to only show endpoints matching this tag.
+</ResponseField>
+
+## Writing content
+
+Pages support the full Markdown syntax plus all Viabl components.
+
+### Headings
+
+```mdx
+## Section heading
+
+### Subsection heading
+
+#### Smaller heading
+```
+
+Headings are automatically added to the table of contents on the right side of the page.
+
+### Text formatting
+
+```mdx
+**Bold text**
+_Italic text_
+~~Strikethrough~~
+`inline code`
+```
+
+### Links
+
+```mdx
+[External link](https://example.com)
+[Internal link](/docs/getting-started)
+```
+
+### Lists
+
+```mdx
+- Unordered item
+- Another item
+  - Nested item
+
+1. First step
+2. Second step
+3. Third step
+```
+
+### Images
+
+```mdx
+![Alt text](/images/my-image.png)
+```
+
+Place image files in your project root — a common convention is an `images/` folder. Reference them with an absolute path from the project root.
+
+### Code blocks
+
+Fenced code blocks with a language identifier get full syntax highlighting:
+
+````mdx
+```typescript
+const response = await fetch("/api/users");
+const data = await response.json();
+```
+````
+
+Add a filename after the language to show a title bar:
+
+````mdx
+```typescript index.ts
+const response = await fetch("/api/users");
+```
+````
+
+### Tables
+
+```mdx
+| Name  | Type   | Description        |
+| ----- | ------ | ------------------ |
+| id    | string | Unique identifier  |
+| email | string | User email address |
+| role  | string | User role          |
+```
+
+## Organizing pages
+
+### Nested groups
+
+Navigation groups can be nested to create sub-sections in the sidebar:
+
+```json
+"navigation": [
+  {
+    "group": "Guides",
+    "pages": [
+      "guides/overview",
+      {
+        "group": "Advanced",
+        "pages": [
+          "guides/advanced/custom-domain",
+          "guides/advanced/versioning"
+        ]
+      }
+    ]
+  }
+]
+```
+
+### Group icons
+
+Add an icon to any navigation group:
+
+```json
+{
+  "group": "Getting Started",
+  "icon": "BookOpen",
+  "pages": ["introduction", "getting-started"]
+}
+```
+
+<Tip>
+  Icons use Lucide icon names. Browse all available icons at
+  [lucide.dev](https://lucide.dev).
+</Tip>
+
+## Versioned pages
+
+If your docs have multiple versions, create a folder for each version at the project root:
+
+```
+my-docs/
+├── docs.json
+├── introduction.mdx         ← shared across all versions
+└── v2/
+    └── introduction.mdx     ← overrides for v2
+```
+
+Configure versions in `docs.json`:
+
+```json
+"versions": ["v1", "v2"],
+"defaultVersion": "v2"
+```
+
+When a user selects a version, Viabl looks for the page in the version folder first, then falls back to the root.
+
+## API reference pages
+
+To create an API reference page from an OpenAPI spec, point to your spec file in the frontmatter:
+
+```mdx
+---
+title: API Reference
+openapi: /openapi.yaml
+---
+```
+
+To filter the spec to a specific tag:
+
+```mdx
+---
+title: Users API
+openapi: /openapi.yaml
+openapiTag: Users
+---
+```
+
+Place your OpenAPI spec file at the project root. Both `.yaml` and `.json` formats are supported.
+
+<Warning>
+  The `openapi` frontmatter field replaces the page body entirely. Any MDX
+  content below the frontmatter will be ignored when `openapi` is set.
+</Warning>
+
+## Live reload
+
+While running `viabl dev`, any change to an MDX file or `docs.json` is reflected in the browser automatically — no manual refresh needed.
+
+<Check>Edit page content — reloads instantly</Check>
+<Check>Add a new page to navigation — sidebar updates</Check>
+<Check>Change frontmatter title — tab title and heading update</Check>
+<Check>Add or remove a navigation group — sidebar updates</Check>

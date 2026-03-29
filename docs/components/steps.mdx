@@ -1,0 +1,126 @@
+---
+title: Steps
+description: Display a sequence of actions or instructions in a numbered, visually connected step layout.
+---
+
+## Overview
+
+The `Steps` and `Step` components provide a clean way to present multi-step processes, installation guides, or sequential instructions with numbered indicators and a connecting line.
+
+- **Steps**: The wrapper component that manages numbering and layout.
+- **Step**: An individual step with an optional title and content.
+
+---
+
+## Example
+
+<Steps>
+  <Step title="Install the package">
+    Run the following command in your project root: ````bash npm install
+    my-package ````
+  </Step>
+  <Step title="Configure your environment">
+    Add the required environment variables to your `.env` file.
+  </Step>
+  <Step title="Start the server">
+    You're all set. Run `npm run dev` to start your development server.
+  </Step>
+</Steps>
+
+---
+
+## Usage
+
+### Basic steps
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Steps>
+      <Step title="First step">Content for the first step.</Step>
+      <Step title="Second step">Content for the second step.</Step>
+    </Steps>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Steps>
+      <Step title="First step">Content for the first step.</Step>
+      <Step title="Second step">Content for the second step.</Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+### Steps without titles
+
+The `title` prop is optional. Steps render content-only when omitted:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Steps>
+      <Step>Clone the repository.</Step>
+      <Step>Install dependencies with `npm install`.</Step>
+      <Step>Run `npm run dev` to start the server.</Step>
+    </Steps>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Steps>
+      <Step>Clone the repository.</Step>
+      <Step>Install dependencies with `npm install`.</Step>
+      <Step>Run `npm run dev` to start the server.</Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+### Steps with rich content
+
+Each step can contain any MDX content including code blocks, callouts, and other components:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Steps>
+      <Step title="Install dependencies">```bash npm install ```</Step>
+      <Step title="Set environment variables">
+        <Note>Copy `.env.example` to `.env` before editing.</Note>
+        Add your API keys to the `.env` file.
+      </Step>
+    </Steps>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Steps>
+      <Step title="Install dependencies">````bash npm install ````</Step>
+      <Step title="Set environment variables">
+        <Note>Copy `.env.example` to `.env` before editing.</Note>
+        Add your API keys to the `.env` file.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+**Steps**
+
+| Prop       | Type              | Required | Description                              |
+| ---------- | ----------------- | -------- | ---------------------------------------- |
+| `children` | `React.ReactNode` | Yes      | One or more `Step` components to render. |
+
+**Step**
+
+| Prop       | Type              | Required | Description                                                          |
+| ---------- | ----------------- | -------- | -------------------------------------------------------------------- |
+| `title`    | `string`          | No       | Heading displayed next to the step number.                           |
+| `children` | `React.ReactNode` | Yes      | The content of the step. Accepts any valid MDX including components. |
+
+---
+
+## Accessibility Notes
+
+- Steps are purely visual and rendered as `div` elements — they do not use `ol`/`li` semantics. If strict list semantics matter, consider supplementing with screen-reader-only text.
+- Ensure each step title clearly describes the action to be taken.
+- Avoid skipping logical sequence — steps are numbered automatically starting from 1.

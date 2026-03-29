@@ -1,0 +1,170 @@
+---
+title: Accordion
+description: Collapsible content sections for organizing information without overwhelming the reader.
+---
+
+## Overview
+
+The `Accordion` and `AccordionGroup` components let you hide and reveal content on demand. They are ideal for FAQs, optional details, and progressive disclosure of complex information.
+
+- **Accordion**: A single collapsible section with a title and toggle.
+- **AccordionGroup**: A wrapper for grouping multiple accordions together.
+
+---
+
+## Example
+
+<AccordionGroup>
+  <Accordion title="What is Docsmith?">
+    Docsmith is a documentation framework built on Next.js that lets you write
+    docs in MDX.
+  </Accordion>
+  <Accordion title="How do I add a new page?">
+    Create a new `.mdx` file in your `docs` folder and it will automatically
+    appear in the sidebar.
+  </Accordion>
+  <Accordion title="Is it open source?" defaultOpen>
+    Yes — Docsmith is fully open source and available on GitHub.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Usage
+
+### Basic accordion
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Accordion title="What is this?">
+      This is the content inside the accordion.
+    </Accordion>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Accordion title="What is this?">
+      This is the content inside the accordion.
+    </Accordion>
+  </Tab>
+</Tabs>
+
+### Open by default
+
+Use `defaultOpen` to have an accordion expanded on initial render:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Accordion title="Already open" defaultOpen>
+      This accordion starts expanded.
+    </Accordion>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Accordion title="Already open" defaultOpen>
+      This accordion starts expanded.
+    </Accordion>
+  </Tab>
+</Tabs>
+
+### Grouped accordions
+
+Wrap multiple `Accordion` components in `AccordionGroup` for consistent spacing:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <AccordionGroup>
+      <Accordion title="First question">
+        Answer to the first question.
+      </Accordion>
+      <Accordion title="Second question">
+        Answer to the second question.
+      </Accordion>
+      <Accordion title="Third question">
+        Answer to the third question.
+      </Accordion>
+    </AccordionGroup>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <AccordionGroup>
+      <Accordion title="First question">
+        Answer to the first question.
+      </Accordion>
+      <Accordion title="Second question">
+        Answer to the second question.
+      </Accordion>
+      <Accordion title="Third question">
+        Answer to the third question.
+      </Accordion>
+    </AccordionGroup>
+  </Tab>
+</Tabs>
+
+### Accordion with rich content
+
+Accordion content supports any valid MDX including code blocks and other components:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+        <Accordion title="How do I install the package?">
+            Run the following command
+            ```bash
+                npm install my-package
+            ```
+
+                Then import it in your project:
+
+            ```ts
+            import { something } from "my-package";
+            ```
+        </Accordion>
+    `````
+
+  </Tab>
+  <Tab title="Output">
+ 
+        <Accordion title="How do I install the package?">
+            Run the following command
+            ```bash
+                npm install my-package
+            ```
+
+                Then import it in your project:
+
+            ```ts
+            import { something } from "my-package";
+            ```
+        </Accordion>
+
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+**Accordion**
+
+| Prop          | Type              | Required | Default | Description                                          |
+| ------------- | ----------------- | -------- | ------- | ---------------------------------------------------- |
+| `title`       | `string`          | Yes      | —       | The heading shown in the clickable toggle bar.       |
+| `children`    | `React.ReactNode` | Yes      | —       | Content revealed when the accordion is expanded.     |
+| `defaultOpen` | `boolean`         | No       | `false` | Whether the accordion is expanded on initial render. |
+
+**AccordionGroup**
+
+| Prop       | Type              | Required | Description                                           |
+| ---------- | ----------------- | -------- | ----------------------------------------------------- |
+| `children` | `React.ReactNode` | Yes      | One or more `Accordion` components to group together. |
+
+---
+
+## Accessibility Notes
+
+- The toggle is a `<button>` element and is fully keyboard accessible.
+- Use clear, descriptive titles so users can anticipate the content before expanding.
+- Avoid nesting accordions inside other accordions as this creates confusing hierarchy.

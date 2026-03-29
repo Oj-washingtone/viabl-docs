@@ -1,0 +1,153 @@
+---
+title: Update
+description: Display a chronological timeline of changes, releases, or changelog entries.
+---
+
+## Overview
+
+The `Update` component renders a single entry in a vertical timeline. Each entry has a labeled marker, an optional description, and freeform content. Stack multiple `Update` components to build a changelog or release history page.
+
+---
+
+## Example
+
+<Update label="v1.2.0" description="January 2025">
+  Added dark mode support and improved mobile responsiveness across all
+  components.
+</Update>
+
+<Update label="v1.1.0" description="December 2024">
+  Introduced the `Expandable` and `Tooltip` components.
+</Update>
+
+<Update label="v1.0.0" description="November 2024">
+  Initial release with core component set.
+</Update>
+
+---
+
+## Usage
+
+### Basic update entry
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Update label="v1.0.0" description="November 2024">
+      Initial release with core component set.
+    </Update>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <Update label="v1.0.0" description="November 2024">
+      Initial release with core component set.
+    </Update>
+  </Tab>
+</Tabs>
+
+### Without description
+
+The `description` prop is optional — the label stands alone when omitted:
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Update label="Hotfix">
+      Fixed a critical issue with token validation on the `/auth/refresh`
+      endpoint.
+    </Update>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <Update label="Hotfix">
+      Fixed a critical issue with token validation on the `/auth/refresh`
+      endpoint.
+    </Update>
+  </Tab>
+</Tabs>
+
+### Changelog page
+
+Stack multiple entries to build a full changelog:
+
+<Tabs>
+  <Tab title="Code">
+```mdx
+    <Update label="v2.0.0" description="March 2025">
+      Major release. Redesigned the config system and added OpenAPI support.
+    </Update>
+
+    <Update label="v1.3.0" description="February 2025">
+      Added the `Update`, `Badge`, and `Tooltip` components.
+    </Update>
+
+    <Update label="v1.0.0" description="November 2024">
+      Initial release.
+    </Update>
+
+````
+  </Tab>
+  <Tab title="Output">
+    <Update label="v2.0.0" description="March 2025">
+      Major release. Redesigned the config system and added OpenAPI support.
+    </Update>
+
+    <Update label="v1.3.0" description="February 2025">
+      Added the `Update`, `Badge`, and `Tooltip` components.
+    </Update>
+
+    <Update label="v1.0.0" description="November 2024">
+      Initial release.
+    </Update>
+  </Tab>
+</Tabs>
+
+### With rich content
+
+Each entry supports any valid MDX content:
+
+<Tabs>
+  <Tab title="Code">
+```mdx
+    <Update label="v1.2.0" description="January 2025">
+      **Breaking changes:**
+      - Renamed `DocImage` prop `darkSrc` to `dark`
+      - Removed deprecated `size` prop from `Badge`
+
+      **New features:**
+      - Added `defaultOpen` prop to `Expandable`
+      - Introduced `AccordionGroup` wrapper component
+    </Update>
+````
+
+  </Tab>
+  <Tab title="Output">
+    <Update label="v1.2.0" description="January 2025">
+      **Breaking changes:**
+      - Renamed `DocImage` prop `darkSrc` to `dark`
+      - Removed deprecated `size` prop from `Badge`
+
+      **New features:**
+      - Added `defaultOpen` prop to `Expandable`
+      - Introduced `AccordionGroup` wrapper component
+    </Update>
+
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+| Prop          | Type              | Required | Description                                                         |
+| ------------- | ----------------- | -------- | ------------------------------------------------------------------- |
+| `label`       | `string`          | Yes      | The version, date, or tag shown in the accent-colored marker badge. |
+| `description` | `string`          | No       | Secondary text shown beside the label, typically a date or summary. |
+| `children`    | `React.ReactNode` | Yes      | The content of the update entry. Accepts any valid MDX.             |
+
+---
+
+## Accessibility Notes
+
+- The timeline is rendered using `div` elements with no semantic list markup. If strict chronological semantics matter, consider wrapping entries in an `<ol>` via a custom layout.
+- Use consistent `label` formatting across entries — either always use version numbers or always use dates — to help readers scan the timeline quickly.

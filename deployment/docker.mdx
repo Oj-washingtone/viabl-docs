@@ -1,0 +1,184 @@
+---
+title: Docker
+description: Build a Docker image and run your Viabl docs in a container.
+---
+
+Docker is the most portable way to deploy Viabl. Build once, run anywhere — on a VPS, a Kubernetes cluster, or any container hosting platform.
+
+## Prerequisites
+
+<Check>Docker installed on your machine</Check>
+<Check>Docker installed on your target server</Check>
+<Check>`viabl build` run successfully — `.viabl/` folder exists</Check>
+
+## Dockerfile
+
+Create a `Dockerfile` at the root of your docs project:
+
+```dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy the build output
+COPY .viabl/ .
+
+EXPOSE 7777
+
+CMD ["node", "start.js"]
+```
+
+<Note>
+  The `Dockerfile` lives at your project root alongside `docs.json`, not inside
+  `.viabl/`. The build context is your project root and we copy only the
+  `.viabl/` folder into the image.
+</Note>
+
+## Build the image
+
+```bash
+docker build -t my-docs .
+```
+
+Replace `my-docs` with whatever name makes sense for your project.
+
+## Run the container
+
+```bash
+docker run -d \
+  --name my-docs \
+  -p 7777:7777 \
+  -e PORT=7777 \
+  my-docs
+```
+
+Your docs are now live at `http://localhost:7777`.
+
+<ResponseField name="-d" type="flag">
+  Run the container in detached mode — it keeps running after you close the
+  terminal.
+</ResponseField>
+
+<ResponseField name="--name" type="string">
+  A name for the container so you can reference it easily with `docker stop`,
+  `docker logs` etc.
+</ResponseField>
+
+<ResponseField name="-p 7777:7777" type="string">
+  Maps port `7777` on the host to port `7777` inside the container. Change the
+  left side to use a different host port.
+</ResponseField>
+
+<ResponseField name="-e PORT=7777" type="string">
+  Sets the `PORT` environment variable inside the container. Must match the
+  right side of `-p`.
+</ResponseField>
+
+## Useful commands
+
+```bash
+# View logs
+docker logs my-docs
+
+# Follow logs in real time
+docker logs -f my-docs
+
+# Stop the container
+docker stop my-docs
+
+# Restart the container
+docker restart my-docs
+
+# Remove the container
+docker rm -f my-docs
+```
+
+## Updating your docs
+
+When you make changes to your docs:
+
+<Steps>
+  <Step title="Rebuild">
+    Run `viabl build` in your docs project to regenerate `.viabl/`.
+
+```bash
+    viabl build
+```
+
+  </Step>
+  <Step title="Rebuild the image">
+    
+```bash
+    docker build -t my-docs .
+```
+    
+  </Step>
+  <Step title="Replace the running container">
+    
+```bash
+    docker rm -f my-docs
+    docker run -d --name my-docs -p 7777:7777 -e PORT=7777 my-docs
+```
+   
+  </Step>
+</Steps>
+
+## Running multiple projects
+
+Run each project as a separate container on a different port:
+
+```bash
+# Project 1
+docker run -d --name docs-project-1 -p 7777:7777 -e PORT=7777 project-1-image
+
+# Project 2
+docker run -d --name docs-project-2 -p 8777:8777 -e PORT=8777 project-2-image
+```
+
+## Docker Compose
+
+For a more manageable setup, use Docker Compose. Create a `docker-compose.yml` at your project root:
+
+```yaml
+services:
+  docs:
+    build: .
+    container_name: my-docs
+    restart: unless-stopped
+    ports:
+      - "7777:7777"
+    environment:
+      PORT: 7777
+```
+
+Then start it with:
+
+```bash
+docker compose up -d
+```
+
+And update it with:
+
+```bash
+viabl build
+docker compose up -d --build
+```
+
+<Tip>
+  `restart: unless-stopped` ensures your docs container restarts automatically
+  if the server reboots or the process crashes.
+</Tip>
+
+## Using a reverse proxy
+
+In production you will typically put a reverse proxy like Nginx or Caddy in front of your container to handle HTTPS and custom domains.
+
+With Caddy this is as simple as:
+
+```
+your-docs.example.com {
+  reverse_proxy localhost:7777
+}
+```
+
+Caddy handles SSL certificates automatically via Let's Encrypt. See the [VPS guide](/deployment/vps) for a full Nginx setup.

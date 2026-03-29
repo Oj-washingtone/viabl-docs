@@ -1,0 +1,122 @@
+---
+title: Deployment Overview
+description: Build and deploy your Viabl documentation to your own infrastructure.
+---
+
+Viabl is self-hosted — you own the infrastructure and decide where your docs run. The `viabl build` command packages everything into a single self-contained folder you can deploy anywhere that runs Node.js.
+
+## How it works
+
+<Steps>
+  <Step title="Build">
+    Run `viabl build` inside your docs project. This downloads the exact renderer and content server versions and packages them together with your docs into a `.viabl/` folder.
+
+```bash
+    viabl build
+```
+
+  </Step>
+  <Step title="Copy to your server">
+    Copy the `.viabl/` folder to your server, Docker image, or CI artifact. It is completely self-contained — no internet connection needed at runtime.
+  </Step>
+  <Step title="Run">
+    Start the server with a `PORT` environment variable.
+
+```bash
+    PORT=7777 node .viabl/start.js
+```
+
+    Your docs are live at the port you specified.
+
+  </Step>
+</Steps>
+
+## What viabl build produces
+
+After running `viabl build` your project will have a `.viabl/` folder:
+
+```
+.viabl/
+├── renderer/          ← Next.js standalone build
+├── content-server/    ← Express content server
+│   └── dist/
+│       └── index.js
+├── docs/              ← your docs files, copied in
+│   ├── docs.json
+│   ├── introduction.mdx
+│   └── ...
+└── start.js           ← single entry point that boots everything
+```
+
+<Note>
+  Add `.viabl/` to your `.gitignore` — it is a build artifact and should not be
+  committed to git.
+</Note>
+
+## The start.js entry point
+
+`start.js` is the only file you need to run. It boots both the renderer and content server as separate processes and manages their lifecycle.
+
+<ResponseField name="PORT" type="number" required>
+  The port your docs will be served on. There is no default — you must provide
+  this.
+</ResponseField>
+
+<ResponseField name="CONTENT_PORT" type="number">
+  The port the internal content server runs on. Defaults to `PORT + 1`. You only
+  need to set this if you are running multiple docs projects on the same server
+  and need to avoid port conflicts.
+</ResponseField>
+```bash # Basic usage PORT=7777 node .viabl/start.js
+
+# With explicit content port
+
+PORT=7777 CONTENT_PORT=8777 node .viabl/start.js
+
+````
+
+## Running multiple projects
+
+Each docs project is completely independent. Run them on different ports:
+```bash
+# Project 1
+PORT=7777 node /srv/docs-project-1/.viabl/start.js
+
+# Project 2
+PORT=8777 node /srv/docs-project-2/.viabl/start.js
+````
+
+<Warning>
+  Never run two projects on the same `PORT`. Each project also needs a unique
+  `CONTENT_PORT` — if you do not set it explicitly it defaults to `PORT + 1`, so
+  two projects on ports `7777` and `7778` would conflict on the content port.
+  Use ports that are at least 2 apart, or set `CONTENT_PORT` explicitly.
+</Warning>
+
+## Requirements
+
+<Check>Node.js 20 or higher on the target server</Check>
+<Check>Ports open in your firewall for the ports you choose</Check>
+<Check>A process manager like PM2 or systemd to keep the server running</Check>
+
+## Deployment guides
+
+<CardGroup cols={2}>
+  <Card title="Docker" icon="Container" href="/deployment/docker">
+    Build a Docker image and run your docs in a container.
+  </Card>
+  <Card
+    title="GitHub Actions"
+    icon="GitBranch"
+    href="/deployment/github-actions"
+  >
+    Automate your docs deployment with a GitHub Actions workflow.
+  </Card>
+  <Card title="VPS" icon="Server" href="/deployment/vps">
+    Deploy to a Linux VPS running Ubuntu or Debian with PM2 as a process
+    manager.
+  </Card>
+  <Card title="Railway" icon="Train" href="/deployment/railway">
+    Deploy to Railway — the simplest managed Node.js hosting available.
+  </Card>
+</CardGroup>

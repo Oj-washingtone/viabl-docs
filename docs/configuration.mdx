@@ -1,0 +1,401 @@
+---
+title: Configuration
+description: Everything about configuring your Viabl documentation project with docs.json.
+---
+
+All configuration for your Viabl project lives in a single `docs.json` file at the root of your project. Add the `$schema` field to get full intellisense and validation in VS Code.
+
+```json
+{
+  "$schema": "https://viabl.dev/schema/docs.json",
+  "name": "My Docs",
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction"]
+    }
+  ]
+}
+```
+
+<Note>
+  Only `name` and `navigation` are required. Everything else is optional.
+</Note>
+
+## Identity
+
+<ResponseField name="name" type="string" required>
+  The name of your documentation site. Shown in the browser tab and header.
+</ResponseField>
+
+<ResponseField name="favicon" type="string">
+  Path to your favicon relative to the project root.
+```json
+  { "favicon": "/favicon.png" }
+```
+</ResponseField>
+
+## Logo
+
+Controls the logo shown in the top left of your docs.
+
+<ResponseField name="logo.light" type="string">
+  Path to the logo image used in light mode.
+</ResponseField>
+
+<ResponseField name="logo.dark" type="string">
+  Path to the logo image used in dark mode.
+</ResponseField>
+
+<ResponseField name="logo.href" type="string">
+  URL to navigate to when the logo is clicked. Defaults to the docs root.
+</ResponseField>
+```json
+"logo": {
+  "light": "/logo/light.svg",
+  "dark": "/logo/dark.svg",
+  "href": "https://example.com"
+}
+```
+
+## Colors
+
+Brand color configuration. Controls the accent colors used throughout your docs.
+
+<ResponseField name="colors.primary" type="string">
+  Base brand color used as the default accent. Example: `#ff5800`
+</ResponseField>
+
+<ResponseField name="colors.light" type="string">
+  Color variant for light backgrounds — usually darker or more saturated for
+  contrast on white.
+</ResponseField>
+
+<ResponseField name="colors.dark" type="string">
+  Color variant for dark backgrounds — usually lighter or more vibrant to pop on
+  dark.
+</ResponseField>
+
+<ResponseField name="colors.background.light" type="string">
+  Background color for light mode. Supports CSS gradients.
+</ResponseField>
+
+<ResponseField name="colors.background.dark" type="string">
+  Background color for dark mode. Supports CSS gradients.
+</ResponseField>
+
+<ResponseField name="colors.anchors.from" type="string">
+  Start color of the anchor icon gradient in the sidebar.
+</ResponseField>
+
+<ResponseField name="colors.anchors.to" type="string">
+  End color of the anchor icon gradient in the sidebar.
+</ResponseField>
+```json
+"colors": {
+  "primary": "#ff5800",
+  "light": "#ff5800",
+  "dark": "#ff7733",
+  "background": {
+    "dark": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,88,0,0.15), transparent), #0c0d0f",
+    "light": "#ffffff"
+  },
+  "anchors": {
+    "from": "#ff5800",
+    "to": "#ce0569"
+  }
+}
+```
+
+## Fonts
+
+Custom font configuration for headings and body text.
+
+<ResponseField name="font.headings.family" type="string">
+  Font family name for headings. Example: `Inter`
+</ResponseField>
+
+<ResponseField name="font.headings.url" type="string">
+  URL to load the heading font from. Example: a Google Fonts CSS URL.
+</ResponseField>
+
+<ResponseField name="font.body.family" type="string">
+  Font family name for body text.
+</ResponseField>
+
+<ResponseField name="font.body.url" type="string">
+  URL to load the body font from.
+</ResponseField>
+```json
+"font": {
+  "headings": {
+    "family": "Geist",
+    "url": "https://fonts.googleapis.com/css2?family=Geist"
+  },
+  "body": {
+    "family": "Geist",
+    "url": "https://fonts.googleapis.com/css2?family=Geist"
+  }
+}
+```
+
+## Navigation
+
+The sidebar navigation structure. An array of groups each containing pages or nested groups.
+
+<ResponseField name="navigation[].group" type="string" required>
+  Display name of the navigation group shown in the sidebar.
+</ResponseField>
+
+<ResponseField name="navigation[].icon" type="string">
+  Icon name shown next to the group label.
+</ResponseField>
+
+<ResponseField name="navigation[].pages" type="string[] | NavigationGroup[]" required>
+  Pages or nested groups inside this group. Pages are slugs relative to the project root with no file extension — `introduction` maps to `introduction.mdx`.
+</ResponseField>
+```json
+"navigation": [
+  {
+    "group": "Getting Started",
+    "icon": "BookOpen",
+    "pages": ["introduction", "getting-started"]
+  },
+  {
+    "group": "Guides",
+    "pages": [
+      "guides/overview",
+      {
+        "group": "Advanced",
+        "pages": ["guides/advanced/custom-domain"]
+      }
+    ]
+  }
+]
+```
+
+## Top Bar
+
+### Links
+
+<ResponseField name="topbarLinks[].name" type="string" required>
+  Display text for the link.
+</ResponseField>
+
+<ResponseField name="topbarLinks[].url" type="string" required>
+  URL the link points to.
+</ResponseField>
+
+<ResponseField name="topbarLinks[].blank" type="boolean">
+  Whether the link opens in a new tab. Defaults to `false`.
+</ResponseField>
+```json
+"topbarLinks": [
+  { "name": "Support", "url": "https://example.com/support", "blank": true }
+]
+```
+
+### CTA Button
+
+<ResponseField name="topbarCtaButton.name" type="string" required>
+  Button label text.
+</ResponseField>
+
+<ResponseField name="topbarCtaButton.url" type="string" required>
+  URL the button links to.
+</ResponseField>
+
+<ResponseField name="topbarCtaButton.style" type='"fill" | "outline"'>
+  Visual style of the button. Defaults to `fill`.
+</ResponseField>
+
+<ResponseField name="topbarCtaButton.arrow" type="boolean">
+  Whether to show an arrow icon next to the label. Defaults to `false`.
+</ResponseField>
+
+<ResponseField name="topbarCtaButton.icon" type="string">
+  Icon name to show inside the button.
+</ResponseField>
+
+<ResponseField name="topbarCtaButton.anchor" type="boolean">
+  Pin the button to the right side of the top bar.
+</ResponseField>
+```json
+"topbarCtaButton": {
+  "name": "Get Started",
+  "url": "https://example.com/signup",
+  "style": "fill",
+  "arrow": true
+}
+```
+
+## Tabs
+
+Tabs shown below the top navigation bar for switching between major sections.
+
+<ResponseField name="tabs[].name" type="string" required>
+  Tab label text.
+</ResponseField>
+
+<ResponseField name="tabs[].url" type="string" required>
+  URL path this tab links to.
+</ResponseField>
+
+<ResponseField name="tabs[].icon" type="string">
+  Icon name shown next to the tab label.
+</ResponseField>
+
+<ResponseField name="tabs[].anchor" type="boolean">
+  Pin this tab to the right side of the tab bar.
+</ResponseField>
+```json
+"tabs": [
+  { "name": "Documentation", "url": "/docs", "icon": "BookOpen" },
+  { "name": "API Reference", "url": "/api-reference", "icon": "Code2" }
+]
+```
+
+## Anchors
+
+Special links shown at the top of the sidebar before navigation groups. Good for GitHub, Discord, or any external link you want to surface prominently.
+
+<ResponseField name="anchors[].name" type="string" required>
+  Display name of the anchor link.
+</ResponseField>
+
+<ResponseField name="anchors[].url" type="string" required>
+  URL the anchor links to.
+</ResponseField>
+
+<ResponseField name="anchors[].icon" type="string">
+  Icon name shown next to the anchor.
+</ResponseField>
+
+<ResponseField name="anchors[].color" type="string">
+  Custom color for the anchor icon.
+</ResponseField>
+```json
+"anchors": [
+  {
+    "name": "GitHub",
+    "icon": "Github",
+    "url": "https://github.com/your-org/your-repo",
+    "color": "#333333"
+  },
+  {
+    "name": "Discord",
+    "icon": "MessageCircle",
+    "url": "https://discord.gg/your-invite",
+    "color": "#5865f2"
+  }
+]
+```
+
+## Versions
+
+Show a version switcher in the top bar to let users switch between different versions of your docs.
+
+<ResponseField name="versions" type="string[]">
+  List of version identifiers. Each version should have a corresponding folder
+  at the project root.
+</ResponseField>
+
+<ResponseField name="defaultVersion" type="string">
+  The version shown by default. Must match one of the values in `versions`.
+</ResponseField>
+```json "versions": ["v1", "v2"], "defaultVersion": "v2" ```
+
+<Tip>
+  Each version folder should mirror your root docs structure. For example
+  `v2/introduction.mdx` serves the introduction page for version `v2`.
+</Tip>
+
+## Footer Socials
+
+Social media links shown in the footer.
+
+<ResponseField name="footerSocials.x" type="string">X (Twitter) profile URL.</ResponseField>
+<ResponseField name="footerSocials.github" type="string">GitHub profile or organization URL.</ResponseField>
+<ResponseField name="footerSocials.linkedin" type="string">LinkedIn profile or company URL.</ResponseField>
+<ResponseField name="footerSocials.discord" type="string">Discord invite URL.</ResponseField>
+<ResponseField name="footerSocials.youtube" type="string">YouTube channel URL.</ResponseField>
+<ResponseField name="footerSocials.website" type="string">Your main website URL.</ResponseField>
+```json
+"footerSocials": {
+  "github": "https://github.com/your-org",
+  "x": "https://x.com/your-handle",
+  "discord": "https://discord.gg/your-invite"
+}
+```
+
+## SEO
+
+<ResponseField name="seo.indexHiding" type="boolean">
+  Set to `true` to prevent search engines from indexing your docs. Defaults to
+  `false`.
+</ResponseField>
+
+<ResponseField name="seo.og.title" type="string">
+  Title shown in social media previews.
+</ResponseField>
+
+<ResponseField name="seo.og.description" type="string">
+  Description shown in social media previews.
+</ResponseField>
+
+<ResponseField name="seo.og.image" type="string">
+  Path to the Open Graph image. Example: `/og-image.png`
+</ResponseField>
+```json
+"seo": {
+  "indexHiding": false,
+  "og": {
+    "title": "My Docs",
+    "description": "Documentation for My Product",
+    "image": "/og-image.png"
+  }
+}
+```
+
+## Search
+
+<ResponseField name="search.prompt" type="string">
+  Placeholder text shown in the search bar. Defaults to `Search documentation...`
+</ResponseField>
+```json
+"search": {
+  "prompt": "Search the docs..."
+}
+```
+
+## Feedback
+
+Let readers rate pages, suggest edits, or raise issues directly from your docs.
+
+<ResponseField name="feedback.thumbsRating" type="boolean">
+  Show thumbs up/down rating buttons at the bottom of each page.
+</ResponseField>
+
+<ResponseField name="feedback.suggestEdit" type="boolean">
+  Show a Suggest Edit link that opens the page source on GitHub.
+</ResponseField>
+
+<ResponseField name="feedback.raiseIssue" type="boolean">
+  Show a Raise Issue link that opens a new GitHub issue.
+</ResponseField>
+
+<ResponseField name="feedback.webhook" type="string">
+  URL to POST feedback data to when a user submits a rating.
+</ResponseField>
+
+<ResponseField name="feedback.githubRepo" type="string">
+  GitHub repository URL used for Suggest Edit and Raise Issue links.
+</ResponseField>
+```json
+"feedback": {
+  "thumbsRating": true,
+  "suggestEdit": true,
+  "raiseIssue": true,
+  "githubRepo": "https://github.com/your-org/your-repo"
+}
+```

@@ -1,0 +1,170 @@
+---
+title: Tabs
+description: Organize related content into switchable tabbed panels.
+---
+
+## Overview
+
+The `Tabs` and `Tab` components let you group related content under named tabs, allowing readers to switch between views without leaving the page. They are ideal for showing code in multiple languages, platform-specific instructions, or before/after comparisons.
+
+- **Tabs**: The wrapper that manages the active tab state and renders the tab bar.
+- **Tab**: An individual panel with a required `title` shown in the tab bar.
+
+---
+
+## Example
+
+<Tabs>
+  <Tab title="npm">
+````bash
+    npm install my-package
+````
+
+  </Tab>
+  <Tab title="yarn">
+````bash
+    yarn add my-package
+````
+
+  </Tab>
+  <Tab title="pnpm">
+````bash
+    pnpm add my-package
+````
+
+  </Tab>
+</Tabs>
+
+---
+
+## Usage
+
+### Basic tabs
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+    <Tabs>
+      <Tab title="First">Content for the first tab.</Tab>
+      <Tab title="Second">Content for the second tab.</Tab>
+    </Tabs>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Tabs>
+      <Tab title="First">Content for the first tab.</Tab>
+      <Tab title="Second">Content for the second tab.</Tab>
+    </Tabs>
+  </Tab>
+</Tabs>
+
+### Code in tabs
+
+When embedding code blocks inside tabs, add blank lines before and after each code fence:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+        <Tabs>
+            <Tab title="TypeScript">
+            ```ts
+                    const greet = (name: string): string => `Hello, ${name}`;
+            ```
+            </Tab>
+            <Tab title="JavaScript">
+                ```js
+                    const greet = (name) => `Hello, ${name}`;
+                ```
+            </Tab>
+        </Tabs>
+
+    `````
+
+  </Tab>
+  <Tab title="Output">
+    <Tabs>
+        <Tab title="TypeScript">
+        ```ts
+                const greet = (name: string): string => `Hello, ${name}`;
+        ```
+        </Tab>
+        <Tab title="JavaScript">
+            ```js
+                const greet = (name) => `Hello, ${name}`;
+            ```
+        </Tab>
+    </Tabs>
+
+  </Tab>
+</Tabs>
+
+### Code and preview tabs
+
+A common pattern for documentation is pairing a `Code` tab with an `Output` tab:
+
+<Tabs>
+  <Tab title="Code">
+    ````mdx
+        <Tabs>
+            <Tab title="Code">
+                ```tsx
+                        export function Hello() {
+                        return <p>Hello world</p>;
+                        }
+                ```
+            </Tab>
+            <Tab title="Output">
+                Content rendered here.
+            </Tab>
+        </Tabs>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Tabs>
+      <Tab title="Code">
+        ````tsx
+                export function Hello() {
+                return <p>Hello world</p>;
+                }
+        ````
+      </Tab>
+      <Tab title="Output">
+        Content rendered here.
+      </Tab>
+    </Tabs>
+
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+**Tabs**
+
+| Prop       | Type              | Required | Description                             |
+| ---------- | ----------------- | -------- | --------------------------------------- |
+| `children` | `React.ReactNode` | Yes      | One or more `Tab` components to render. |
+
+**Tab**
+
+| Prop       | Type              | Required | Description                                    |
+| ---------- | ----------------- | -------- | ---------------------------------------------- |
+| `title`    | `string`          | Yes      | The label shown in the tab bar for this panel. |
+| `children` | `React.ReactNode` | Yes      | The content displayed when this tab is active. |
+
+---
+
+## Notes
+
+- The first tab is active by default.
+- Tabs ignores non-element children such as whitespace and text nodes injected by MDX, so only `Tab` components with a `title` prop are rendered.
+- Always add blank lines before and after code fences inside `Tab` content to prevent MDX from collapsing them onto a single line.
+
+---
+
+## Accessibility Notes
+
+- Tab buttons are rendered as `<button>` elements and are keyboard accessible.
+- Consider using descriptive tab titles so users can anticipate the content before switching.
+- Avoid putting critical information exclusively in a non-default tab where possible.

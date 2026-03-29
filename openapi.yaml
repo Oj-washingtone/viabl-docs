@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: My API
+  description: API documentation
+  version: 2.0.0
+servers:
+  - url: http://localhost:8080
+    description: Production
+
+paths:
+  /api/auth/verify/email:
+    post:
+      summary: Verify Email
+      description: Send a verification email to the provided address
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email address to verify
+                  example: user@example.com
+      responses:
+        "200":
+          description: Verification email sent successfully
+        "400":
+          description: Invalid email address
+        "404":
+          description: Email not found
+        "500":
+          description: Internal server error
+
+  /api/upload/profile-picture:
+    post:
+      summary: Upload Profile Picture
+      tags: [Upload]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: The image file to upload
+      responses:
+        "200":
+          description: Image uploaded successfully
+        "400":
+          description: Invalid file
+
+  /v2/users:
+    get:
+      summary: List all users
+      description: Returns a paginated list of users in your workspace.
+      tags: [Users]
+      parameters:
+        - name: limit
+          in: query
+          description: Max number of results to return
+          schema:
+            type: integer
+        - name: status
+          in: query
+          description: Filter by status
+          schema:
+            type: string
+            enum: [active, inactive, suspended]
+      responses:
+        '200':
+          description: List of users returned successfully
+        '401':
+          description: Invalid or missing API key
+
+    post:
+      summary: Create a user
+      description: Creates a new user in your workspace.
+      tags: [Users]
+      requestBody:
+        required: true
+        description: User details
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid request body
+
+  /v2/users/{user_id}:
+    get:
+      summary: Get a user
+      description: Retrieves a single user by their ID.
+      tags: [Users]
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The unique user identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found and returned
+        '404':
+          description: User not found
+
+    delete:
+      summary: Delete a user
+      description: Permanently deletes a user and all their data.
+      tags: [Users]
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The unique user identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted successfully
+        '404':
+          description: User not found

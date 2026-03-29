@@ -1,0 +1,143 @@
+---
+title: ResponseField
+description: Document API response fields with name, type, and description in a structured layout.
+---
+
+## Overview
+
+The `ResponseField` component renders a single field in an API response schema. Each entry displays the field name, its type, an optional required badge, and a description. Stack multiple `ResponseField` components to document a full response object.
+
+---
+
+## Example
+
+<ResponseField name="id" type="string" required>
+  The unique identifier for the resource.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp of when the resource was created.
+</ResponseField>
+
+<ResponseField name="metadata" type="object">
+  An optional key-value map of additional data attached to the resource.
+</ResponseField>
+
+---
+
+## Usage
+
+### Basic field
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <ResponseField name="id" type="string">
+      The unique identifier for the resource.
+    </ResponseField>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <ResponseField name="id" type="string">
+      The unique identifier for the resource.
+    </ResponseField>
+  </Tab>
+</Tabs>
+
+### Required field
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <ResponseField name="email" type="string" required>
+      The email address of the user. Must be unique across all accounts.
+    </ResponseField>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <ResponseField name="email" type="string" required>
+      The email address of the user. Must be unique across all accounts.
+    </ResponseField>
+  </Tab>
+</Tabs>
+
+### Full response object
+
+Stack multiple entries to document a complete response schema:
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+        <ResponseField name="id" type="string" required>
+        Unique identifier for the user.
+        </ResponseField>
+
+        <ResponseField name="name" type="string" required>
+        Full display name of the user.
+        </ResponseField>
+
+        <ResponseField name="email" type="string" required>
+        Email address associated with the account.
+        </ResponseField>
+
+        <ResponseField name="role" type="'admin' | 'member' | 'viewer'">
+        The user's permission level within the workspace.
+        </ResponseField>
+
+        <ResponseField name="created_at" type="string">
+        ISO 8601 timestamp of when the account was created.
+        </ResponseField>
+
+        <ResponseField name="metadata" type="object">
+        Optional key-value pairs of additional data attached to the user.
+        </ResponseField>
+
+    ```
+
+  </Tab>
+  <Tab title="Output">
+    <ResponseField name="id" type="string" required>
+      Unique identifier for the user.
+    </ResponseField>
+
+    <ResponseField name="name" type="string" required>
+      Full display name of the user.
+    </ResponseField>
+
+    <ResponseField name="email" type="string" required>
+      Email address associated with the account.
+    </ResponseField>
+
+    <ResponseField name="role" type="'admin' | 'member' | 'viewer'">
+      The user's permission level within the workspace.
+    </ResponseField>
+
+    <ResponseField name="created_at" type="string">
+      ISO 8601 timestamp of when the account was created.
+    </ResponseField>
+
+    <ResponseField name="metadata" type="object">
+      Optional key-value pairs of additional data attached to the user.
+    </ResponseField>
+
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+| Prop       | Type              | Required | Description                                                     |
+| ---------- | ----------------- | -------- | --------------------------------------------------------------- |
+| `name`     | `string`          | Yes      | The field name displayed in monospace.                          |
+| `type`     | `string`          | Yes      | The field's type annotation, e.g. `string`, `number`, `object`. |
+| `required` | `boolean`         | No       | When present, displays a red `required` badge next to the type. |
+| `children` | `React.ReactNode` | Yes      | Description of the field and its expected values or behavior.   |
+
+---
+
+## Accessibility Notes
+
+- Field names and types are rendered in `<code>` and monospace text for clarity.
+- The `required` badge uses both color and text to convey requirement status — it is not color-only.
+- For deeply nested response schemas, consider using `ResponseField` alongside `Expandable` to progressively disclose nested fields.

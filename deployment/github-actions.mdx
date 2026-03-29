@@ -1,0 +1,286 @@
+---
+title: GitHub Actions
+description: Automate your Viabl docs deployment with a GitHub Actions workflow.
+---
+
+GitHub Actions lets you automatically build and deploy your docs every time you push changes to your repository. No manual builds, no manual deploys.
+
+## How it works
+
+```
+git push → GitHub Actions triggers → viabl build → deploy to your server
+```
+
+The workflow installs the Viabl CLI, runs `viabl build`, then copies the `.viabl/` folder to your server and restarts the running process.
+
+## Prerequisites
+
+<Check>Your docs project is in a GitHub repository</Check>
+<Check>A server with Node.js 20+ and SSH access</Check>
+<Check>
+  SSH key pair — private key stored as a GitHub secret, public key on your
+  server
+</Check>
+<Check>
+  `viabl` installed on the server or installed as part of the workflow
+</Check>
+
+## Setting up secrets
+
+Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions** and add the following secrets:
+
+<ResponseField name="SSH_HOST" type="secret">
+  The IP address or hostname of your server.
+</ResponseField>
+
+<ResponseField name="SSH_USER" type="secret">
+  The SSH username to connect with. Example: `ubuntu`, `root`, `deploy`.
+</ResponseField>
+
+<ResponseField name="SSH_PRIVATE_KEY" type="secret">
+  The private SSH key used to connect to your server. Paste the full contents of
+  your `.pem` or private key file.
+</ResponseField>
+
+<ResponseField name="SSH_PORT" type="secret">
+  The SSH port on your server. Usually `22`.
+</ResponseField>
+
+## Basic workflow
+
+Create `.github/workflows/deploy.yml` in your docs repository:
+
+```yaml
+name: Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Viabl CLI
+        run: npm install -g viabl
+
+      - name: Build docs
+        run: viabl build
+
+      - name: Copy build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: ".viabl/"
+          target: "/srv/my-docs"
+          rm: true
+
+      - name: Restart docs server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /srv/my-docs
+            pm2 restart my-docs || pm2 start .viabl/start.js --name my-docs
+```
+
+<Note>
+  This workflow uses `appleboy/scp-action` to copy files and
+  `appleboy/ssh-action` to run commands on your server. Both are well-maintained
+  open source GitHub Actions.
+</Note>
+
+## With Docker
+
+If you are deploying with Docker, replace the copy and restart steps with a Docker build and run:
+
+```yaml
+name: Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Viabl CLI
+        run: npm install -g viabl
+
+      - name: Build docs
+        run: viabl build
+
+      - name: Copy build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: ".viabl/,Dockerfile"
+          target: "/srv/my-docs"
+          rm: true
+
+      - name: Build and restart Docker container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /srv/my-docs
+            docker build -t my-docs .
+            docker rm -f my-docs || true
+            docker run -d \
+              --name my-docs \
+              --restart unless-stopped \
+              -p 7777:7777 \
+              -e PORT=7777 \
+              my-docs
+```
+
+## With Railway
+
+If you are deploying to Railway, use the Railway CLI in your workflow instead:
+
+```yaml
+- name: Install Railway CLI
+  run: npm install -g @railway/cli
+
+- name: Deploy to Railway
+  run: railway up --service my-docs
+  env:
+    RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+```
+
+Add `RAILWAY_TOKEN` as a GitHub secret — get it from your Railway account settings.
+
+## Caching the Viabl CLI
+
+On every run the workflow installs the CLI from scratch. Speed this up by caching the global npm prefix:
+
+```yaml
+- name: Cache Viabl CLI
+  uses: actions/cache@v4
+  with:
+    path: ~/.npm-global
+    key: viabl-cli-${{ runner.os }}
+
+- name: Install Viabl CLI
+  run: |
+    npm config set prefix ~/.npm-global
+    npm install -g viabl
+    echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
+```
+
+## Only deploy on changes to docs
+
+If your docs repo also contains other code, trigger the workflow only when docs files change:
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.mdx"
+      - "**.md"
+      - "docs.json"
+      - "public/**"
+      - "openapi.yaml"
+```
+
+## Full workflow with caching and path filtering
+
+```yaml
+name: Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.mdx"
+      - "**.md"
+      - "docs.json"
+      - "public/**"
+      - "openapi.yaml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache Viabl CLI
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm-global
+          key: viabl-cli-${{ runner.os }}
+
+      - name: Install Viabl CLI
+        run: |
+          npm config set prefix ~/.npm-global
+          npm install -g viabl
+          echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        run: viabl build
+
+      - name: Copy build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: ".viabl/"
+          target: "/srv/my-docs"
+          rm: true
+
+      - name: Restart docs server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /srv/my-docs
+            pm2 restart my-docs || pm2 start .viabl/start.js --name my-docs
+```

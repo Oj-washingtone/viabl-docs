@@ -1,0 +1,113 @@
+---
+title: Cards
+description: Display content in a structured, clickable card layout using Card and CardGroup components.
+---
+
+## Overview
+
+The `Card` and `CardGroup` components provide a flexible way to present content in a clean, grid-based layout. They are ideal for navigation, feature highlights, and documentation entry points.
+
+- **Card**: A single content container with optional icon and link.
+- **CardGroup**: A responsive grid wrapper for organizing multiple cards.
+
+---
+
+## Example
+
+<CardGroup cols={2}>
+  <Card title="Getting Started" icon="Rocket" href="/docs/introduction">
+    Get up and running quickly.
+  </Card>
+  <Card title="API Reference" icon="Code2" href="/api-reference/overview">
+    Explore all available endpoints.
+  </Card>
+</CardGroup>
+
+---
+
+## Card
+
+A responsive grid layout for organizing multiple Card components.
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Card title="Getting Started">Get up and running quickly.</Card>
+    ````
+  </Tab>
+  <Tab title="Output">
+    <Card title="Getting Started">Get up and running quickly.</Card>
+  </Tab>
+</Tabs>
+
+**Icon Usage**
+
+Icons are resolved dynamically from lucide-react. If the icon name is not found, the value will be rendered as plain text or emoji:
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <Card title="Analytics" icon="BarChart3">
+      View insights and metrics.
+    </Card>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <Card title="Analytics" icon="BarChart3">
+      View insights and metrics.
+    </Card>
+  </Tab>
+</Tabs>
+
+## CardGroup
+
+A responsive grid layout for organizing multiple Card components.
+
+<Tabs>
+  <Tab title="Code">
+    ```mdx
+    <CardGroup cols={2}>
+      <Card title="Getting Started" icon="Rocket" href="/docs/introduction">
+        Get up and running quickly.
+      </Card>
+      <Card title="API Reference" icon="Code2" href="/api-reference/overview">
+        Explore all available endpoints.
+      </Card>
+    </CardGroup>
+    ```
+  </Tab>
+  <Tab title="Output">
+    <CardGroup cols={2}>
+      <Card title="Getting Started" icon="Rocket" href="/docs/introduction">
+        Get up and running quickly.
+      </Card>
+      <Card title="API Reference" icon="Code2" href="/api-reference/overview">
+        Explore all available endpoints.
+      </Card>
+    </CardGroup>
+  </Tab>
+</Tabs>
+
+## Props
+
+**Card component**
+
+| Prop       | Type              | Required | Description                                                                   |
+| ---------- | ----------------- | -------- | ----------------------------------------------------------------------------- |
+| `title`    | `string`          | yes      | The main heading displayed on the card.                                       |
+| `icon`     | `string`          | No       | Name of a Lucide icon (e.g. "Rocket"). Falls back to text/emoji if not found. |
+| `href`     | `string`          | No       | If provided, the card becomes clickable and navigates to this route.          |
+| `children` | `React.ReactNode` | No       | Additional descriptive content displayed below the title.                     |
+
+**CardGroup**
+
+| Prop     | Type            | Default | Description                                    |
+| -------- | --------------- | ------- | ---------------------------------------------- |
+| cols     | number          | 2       | Number of columns in the grid (1–4 supported). |
+| children | React.ReactNode | Yes     | The Card components to render inside the grid. |
+
+## Accessibility Notes
+
+- Cards with `href` behave as links and are keyboard-accessible via Next.js Link.
+- Ensure title clearly describes the destination or purpose.
+- Avoid relying solely on color to convey meaning.

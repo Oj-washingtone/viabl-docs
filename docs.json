@@ -1,0 +1,110 @@
+{
+    "name": "viabl",
+    "favicon": "/favicon.png",
+    "defaultVersion": "v2",
+    "logo": {
+        "dark": "/logo/dark.svg",
+        "light": "/logo/light.svg",
+        "href": "/docs/welcome-to-viabl"
+    },
+    "colors": {
+        "primary": "#ff5800",
+        "light": "#ff5800",
+        "dark": "#ff7733",
+        "background": {
+            "dark": "radial-gradient(ellipse 60% 10% at 50% -5%, rgba(255,88,0,0.2), transparent), #0c0d0f",
+            "light": "radial-gradient(ellipse 60% 25% at 50% -5%, rgba(255,88,0,0.08), transparent), #ffffff"
+        },
+        "anchors": {
+            "from": "#ff5800",
+            "to": "#ff5800"
+        }
+    },
+    "font": {
+        "headings": {
+            "family": "Geist",
+            "url": "https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/style.css"
+        },
+        "body": {
+            "family": "Geist",
+            "url": "https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/style.css"
+        }
+    },
+    "search": {
+        "prompt": "Search doc..."
+    },
+    "topbarCtaButton": {
+        "name": "Get Started",
+        "url": "/docs/welcome-to-viabl",
+        "style": "fill",
+        "arrow": true,
+        "icon": "Rocket",
+        "blank": false
+    },
+    "navigation": [
+        {
+            "group": "Getting Started",
+            "icon": "Rocket",
+            "pages": [
+                "docs/welcome-to-viabl",
+                "docs/configuration",
+                "docs/writing-pages"
+            ]
+        },
+        {
+            "group": "Components",
+            "icon": "Layers",
+            "pages": [
+                "docs/components/overview",
+                "docs/components/cards",
+                "docs/components/steps",
+                "docs/components/accordion",
+                "docs/components/tabs",
+                "docs/components/callouts",
+                "docs/components/badge",
+                "docs/components/image",
+                "docs/components/tooltip",
+                "docs/components/expandable",
+                "docs/components/update",
+                "docs/components/response-fields"
+            ]
+        },
+        {
+            "group": "Deployment",
+            "icon": "Cloud",
+            "pages": [
+                "deployment/overview",
+                {
+                    "group": "Guides",
+                    "pages": [
+                        "deployment/docker",
+                        "deployment/github-actions"
+                    ]
+                }
+            ]
+        }
+    ],
+    "footerSocials": {
+        "twitter": "https://twitter.com/yourhandle",
+        "github": "https://github.com/yourorg",
+        "linkedin": "https://linkedin.com/company/yourorg",
+        "discord": "https://discord.gg/yourinvite",
+        "youtube": "https://youtube.com/@yourchannel",
+        "website": "https://yourwebsite.com"
+    },
+    "seo": {
+        "indexHiding": true,
+        "og": {
+            "title": "Title that shpould appear when shared",
+            "description": "string",
+            "image": "string"
+        }
+    },
+    "feedback": {
+        "thumbsRating": true,
+        "suggestEdit": true,
+        "raiseIssue": true,
+        "webhook": "http://where-the-feedback-will-go-to",
+        "githubRepo": "https://github.com/Oj-washingtone/viabl"
+    }
+}
