@@ -5,7 +5,7 @@
     "logo": {
         "dark": "/logo/dark.svg",
         "light": "/logo/light.svg",
-        "href": "/docs/welcome-to-viabl"
+        "href": "https://viabl.dev"
     },
     "colors": {
         "primary": "#ff5800",
