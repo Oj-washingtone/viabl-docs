@@ -6,54 +6,47 @@ on:
             - main
 
 jobs:
-    build:
+    deploy:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
 
         steps:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Build viabl docs
-              run: npm ci && npm run build
-              # builds the .viabl/ folder that the Dockerfile copies
-
-            - name: Log in to GitHub Container Registry
-              uses: docker/login-action@v3
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
               with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
+                  node-version: 20
 
-            - name: Build and push image
-              run: |
-                  IMAGE_NAME=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-                  docker build -t $IMAGE_NAME:latest .
-                  docker push $IMAGE_NAME:latest
+            - name: Install Viabl CLI
+              run: npm install -g @viablkit/cli
+            - name: Build docs
+              run: viabl build
 
-    deploy:
-        runs-on: ubuntu-latest
-        needs: build
+            - name: Copy build to server
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USER }}
+                  key: ${{ secrets.VPS_SSH_KEY }}
+                  source: ".viabl/,Dockerfile"
+                  target: "/opt/viabl/viabl-docs"
+                  rm: true
 
-        steps:
-            - name: SSH and deploy
+            - name: Build and restart Docker container
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.VPS_HOST }}
                   username: ${{ secrets.VPS_USER }}
                   key: ${{ secrets.VPS_SSH_KEY }}
-                  command_timeout: 10m
                   script: |
-                      IMAGE_NAME=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-                      echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-                      docker pull $IMAGE_NAME:latest
-                      docker stop viabl-docs || true
-                      docker rm viabl-docs || true
+                      cd /opt/viabl/viabl-docs
+                      docker build --no-cache -t viabl-docs .
+                      docker rm -f viabl-docs || true
                       docker run -d \
-                          --name viabl-docs \
-                          --restart unless-stopped \
-                          -p 7777:7777 \
-                          $IMAGE_NAME:latest
+                      --name viabl-docs \
+                      --restart unless-stopped \
+                      -p 7777:7777 \
+                      -e PORT=7777 \
+                      viabl-docs
                       docker image prune -f
