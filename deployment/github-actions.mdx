@@ -72,7 +72,7 @@ jobs:
           node-version: 20
 
       - name: Install Viabl CLI
-        run: npm install -g viabl
+        run: npm install -g @viablkit/cli
 
       - name: Build docs
         run: viabl build
@@ -195,7 +195,7 @@ On every run the workflow installs the CLI from scratch. Speed this up by cachin
 - name: Install Viabl CLI
   run: |
     npm config set prefix ~/.npm-global
-    npm install -g viabl
+    npm install -g @viablkit/cli
     echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
 ```
 
@@ -254,7 +254,7 @@ jobs:
       - name: Install Viabl CLI
         run: |
           npm config set prefix ~/.npm-global
-          npm install -g viabl
+          npm install -g @viablkit/cli
           echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
 
       - name: Build docs
