@@ -97,7 +97,7 @@
         "og": {
             "title": "Viabl documentation",
             "description": "Ship Documentation easily with viabl",
-            "image": "string"
+            "image": "/images/hero-white.png"
         }
     },
     "feedback": {
