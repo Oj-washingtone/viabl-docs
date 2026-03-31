@@ -85,12 +85,12 @@
         }
     ],
     "footerSocials": {
-        "twitter": "https://twitter.com/yourhandle",
-        "github": "https://github.com/yourorg",
+        "twitter": "https://twitter.com/viablkit",
+        "github": "https://github.com/viabl-cli",
         "linkedin": "https://linkedin.com/company/yourorg",
         "discord": "https://discord.gg/yourinvite",
         "youtube": "https://youtube.com/@yourchannel",
-        "website": "https://yourwebsite.com"
+        "website": "https://viabl.dev"
     },
     "seo": {
         "indexHiding": true,
