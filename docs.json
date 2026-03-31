@@ -87,9 +87,7 @@
     "footerSocials": {
         "twitter": "https://twitter.com/viablkit",
         "github": "https://github.com/viabl-cli",
-        "linkedin": "https://linkedin.com/company/yourorg",
-        "discord": "https://discord.gg/yourinvite",
-        "youtube": "https://youtube.com/@yourchannel",
+        "linkedin": "https://linkedin.com/company/viablkit",
         "website": "https://viabl.dev"
     },
     "seo": {
