@@ -1,52 +1,52 @@
 name: Deploy Docs
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-            - name: Install Viabl CLI
-              run: npm install -g @viablkit/cli
-            - name: Build docs
-              run: viabl build
+      - name: Install Viabl CLI
+        run: npm install -g @viablkit/cli
+      - name: Build docs
+        run: viabl build
 
-            - name: Copy build to server
-              uses: appleboy/scp-action@v0.1.7
-              with:
-                  host: ${{ secrets.VPS_HOST }}
-                  username: ${{ secrets.VPS_USER }}
-                  key: ${{ secrets.VPS_SSH_KEY }}
-                  source: ".viabl/,Dockerfile"
-                  target: "/opt/viabl/viabl-docs"
-                  rm: true
+      - name: Copy build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: ".viabl/,Dockerfile"
+          target: "/opt/viabl/viabl-docs"
+          rm: true
 
-            - name: Build and restart Docker container
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                  host: ${{ secrets.VPS_HOST }}
-                  username: ${{ secrets.VPS_USER }}
-                  key: ${{ secrets.VPS_SSH_KEY }}
-                  script: |
-                      cd /opt/viabl/viabl-docs
-                      docker build --no-cache -t viabl-docs .
-                      docker rm -f viabl-docs || true
-                      docker run -d \
-                      --name viabl-docs \
-                      --restart unless-stopped \
-                      -p 7777:7777 \
-                      -e PORT=7777 \
-                      viabl-docs
-                      docker image prune -f
+      - name: Build and restart Docker container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/viabl/viabl-docs
+            docker build --no-cache -t viabl-docs .
+            docker rm -f viabl-docs || true
+            docker run -d \
+            --name viabl-docs \
+            --restart unless-stopped \
+            -p 7777:7777 \
+            -e PORT=7777 \
+            viabl-docs
+            docker image prune -f
