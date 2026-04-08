@@ -48,6 +48,7 @@
             "icon": "Rocket",
             "pages": [
                 "docs/welcome-to-viabl",
+                "docs/quickstart",
                 "docs/configuration",
                 "docs/writing-pages"
             ]
