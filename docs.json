@@ -1,6 +1,7 @@
 {
     "name": "viabl",
     "url": "https://docs.viabl.dev",
+    "basePath": "/docs",
     "favicon": "/favicon.png",
     "defaultVersion": "v2",
     "logo": {
@@ -47,28 +48,28 @@
             "group": "Getting Started",
             "icon": "Rocket",
             "pages": [
-                "docs/welcome-to-viabl",
-                "docs/quickstart",
-                "docs/configuration",
-                "docs/writing-pages"
+                "quickstart/welcome-to-viabl",
+                "quickstart/quickstart",
+                "quickstart/configuration",
+                "quickstart/writing-pages"
             ]
         },
         {
             "group": "Components",
             "icon": "Layers",
             "pages": [
-                "docs/components/overview",
-                "docs/components/cards",
-                "docs/components/steps",
-                "docs/components/accordion",
-                "docs/components/tabs",
-                "docs/components/callouts",
-                "docs/components/badge",
-                "docs/components/image",
-                "docs/components/tooltip",
-                "docs/components/expandable",
-                "docs/components/update",
-                "docs/components/response-fields"
+                "components/overview",
+                "components/cards",
+                "components/steps",
+                "components/accordion",
+                "components/tabs",
+                "components/callouts",
+                "components/badge",
+                "components/image",
+                "components/tooltip",
+                "components/expandable",
+                "components/update",
+                "components/response-fields"
             ]
         },
         {
