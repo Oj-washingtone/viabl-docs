@@ -37,7 +37,7 @@
     },
     "topbarCtaButton": {
         "name": "Get Started",
-        "url": "/docs/welcome-to-viabl",
+        "url": "/welcome-to-viabl",
         "style": "fill",
         "arrow": true,
         "icon": "Rocket",
@@ -95,7 +95,7 @@
         "discord": "https://discord.gg/JyBMrk4G"
     },
     "seo": {
-        "indexHiding": true,
+        "indexHiding": false,
         "og": {
             "title": "Viabl documentation",
             "description": "Ship Documentation easily with viabl",
