@@ -6,46 +6,22 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Cache viabl
-        uses: actions/cache@v4
-        with:
-          path: ~/.viabl
-          key: viabl-${{ hashFiles('docs.json') }}
-          restore-keys: |
-            viabl-
-
       - name: Install Viabl CLI
         run: npm install -g @viablkit/cli
-
       - name: Build docs
         run: viabl build
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: viabl-build
-          path: .viabl/
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: viabl-build
-          path: .viabl/
 
       - name: Copy build to server
         uses: appleboy/scp-action@v0.1.7
@@ -65,12 +41,12 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/viabl/viabl-docs
-            docker build -t viabl-docs .
+            docker build --no-cache -t viabl-docs .
             docker rm -f viabl-docs || true
             docker run -d \
-              --name viabl-docs \
-              --restart unless-stopped \
-              -p 7777:7777 \
-              -e PORT=7777 \
-              viabl-docs
+            --name viabl-docs \
+            --restart unless-stopped \
+            -p 7777:7777 \
+            -e PORT=7777 \
+            viabl-docs
             docker image prune -f
