@@ -106,7 +106,7 @@
         "thumbsRating": true,
         "suggestEdit": true,
         "raiseIssue": true,
-        "webhook": "http://where-the-feedback-will-go-to",
+        "webhook": "http://where-feedback-is-sent",
         "githubRepo": "https://github.com/Oj-washingtone/viabl-docs"
     }
 }
