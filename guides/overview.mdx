@@ -102,21 +102,17 @@ PORT=8777 node /srv/docs-project-2/.viabl/start.js
 ## Deployment guides
 
 <CardGroup cols={2}>
-  <Card title="Docker" icon="Container" href="/deployment/docker">
+  <Card title="Docker" icon="Container" href="/guides/docker">
     Build a Docker image and run your docs in a container.
   </Card>
-  <Card
-    title="GitHub Actions"
-    icon="GitBranch"
-    href="/deployment/github-actions"
-  >
+  <Card title="GitHub Actions" icon="GitBranch" href="/guides/github-actions">
     Automate your docs deployment with a GitHub Actions workflow.
   </Card>
-  <Card title="VPS" icon="Server" href="/deployment/vps">
-    Deploy to a Linux VPS running Ubuntu or Debian with PM2 as a process
-    manager.
-  </Card>
-  <Card title="Railway" icon="Train" href="/deployment/railway">
-    Deploy to Railway — the simplest managed Node.js hosting available.
+  <Card
+    title="Hosting Under a Subpath"
+    icon="Server"
+    href="/guides/host-under-subpath"
+  >
+    How to host your Viabl docs under a subpath like /docs on your main domain.
   </Card>
 </CardGroup>

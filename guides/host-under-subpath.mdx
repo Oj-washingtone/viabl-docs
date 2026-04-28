@@ -1,0 +1,124 @@
+---
+title: Hosting Under a Subpath
+description: How to host your Viabl docs under a subpath like /docs on your main domain.
+---
+
+Viabl docs run as a standalone server, typically accessible at their own subdomain like `docs.example.com`. If you'd like your docs to be accessible under a subpath of your main domain — such as `example.com/docs` — you can set this up using a reverse proxy.
+
+<Note>
+Before setting up a reverse proxy, make sure your `docs.json` has `basePath` set to match your desired subpath:
+
+```json
+{
+  "basePath": "/docs"
+}
+```
+
+Then run `viabl build` to produce a renderer with the correct basePath baked in.
+
+</Note>
+
+## How it works
+
+Your docs server runs on its own port (e.g. `7777`). Your reverse proxy sits in front of your main domain and forwards requests for `/docs/*` to the docs server, preserving the `/docs` prefix:
+
+Because the `/docs` prefix is preserved end-to-end, all assets (`/_next/static/`, images, logos) resolve correctly through the single proxy rule — no extra configuration needed.
+
+---
+
+## Nginx
+
+Update your Nginx server block to add a `location /docs` block that proxies to your docs server:
+
+```nginx
+location /docs {
+    proxy_pass http://YOUR_DOCS_SERVER_IP:DOCS_PORT/docs;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+Replace `YOUR_DOCS_SERVER_IP` with the IP or hostname of your docs server, and `YOUR_MAIN_APP_IP` with your main application server.
+
+After updating the config, reload Nginx:
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+<Note>
+  Do not add a trailing slash to either the `location` block or the `proxy_pass`
+  URL. Adding trailing slashes causes Nginx to strip the `/docs` prefix before
+  forwarding, which breaks routing and assets.
+</Note>
+
+---
+
+## Next.js
+
+If your main site is built with Next.js, add a rewrite rule in your `next.config.ts`:
+
+```ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/docs/:path*",
+          destination: "http://YOUR_DOCS_SERVER_IP:PORT/docs/:path*",
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
+};
+
+export default nextConfig;
+```
+
+<Note>
+  Using `beforeFiles` ensures the rewrite runs before Next.js checks its own
+  pages and public directory. This prevents conflicts where a page or file in
+  your main app inadvertently intercepts a `/docs` request.
+</Note>
+
+---
+
+## Vercel
+
+If your main site is deployed on Vercel, add a rewrite to your `vercel.json`:
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/docs/:path*",
+      "destination": "http://YOUR_DOCS_SERVER_IP:7777/docs/:path*"
+    }
+  ]
+}
+```
+
+<Note>
+  Your docs server must be publicly accessible for Vercel's edge network to
+  reach it. Make sure your server's firewall allows inbound traffic on port
+  `7777` (or whichever port your docs run on).
+</Note>
+
+---
+
+## Verifying your setup
+
+Once your proxy is configured, visit `example.com/docs` in your browser. You should see your documentation with all styles and assets loading correctly.
+
+If styles are missing, check the following:
+
+- Make sure `basePath` in `docs.json` matches your subpath exactly (e.g. `/docs`)
+- Make sure you ran `viabl build` after setting `basePath`
+- Open browser DevTools → Network and check for any 404 asset requests — they should all resolve under `/docs/_next/static/`
+- Make sure your proxy preserves the `/docs` prefix in the forwarded URL

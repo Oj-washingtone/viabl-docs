@@ -1,6 +1,6 @@
 {
     "name": "viabl",
-    "url": "https://viabl.dev",
+    "url": "http://viabl.dev",
     "basePath": "/docs",
     "favicon": "/favicon.png",
     "defaultVersion": "v2",
@@ -73,17 +73,13 @@
             ]
         },
         {
-            "group": "Deployment",
+            "group": "Guides",
             "icon": "Cloud",
             "pages": [
-                "deployment/overview",
-                {
-                    "group": "Guides",
-                    "pages": [
-                        "deployment/docker",
-                        "deployment/github-actions"
-                    ]
-                }
+                "guides/overview",
+                "guides/docker",
+                "guides/github-actions",
+                "guides/host-under-subpath"
             ]
         }
     ],
