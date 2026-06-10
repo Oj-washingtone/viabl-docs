@@ -1,0 +1,130 @@
+---
+title: Navigation
+description: Configure your documentation sidebar and tab navigation.
+---
+
+Viabl supports three navigation formats. You can choose the one that best fits your project structure — they can also be mixed.
+
+## Legacy format
+
+The simplest format. Pass a flat array of groups directly. Best for smaller sites without top-level tabs.
+
+```json
+"navigation": [
+  {
+    "group": "Getting Started",
+    "pages": ["introduction", "getting-started"]
+  },
+  {
+    "group": "Guides",
+    "pages": ["guides/deployment"]
+  }
+]
+```
+
+## Dictionary format
+
+Best for larger sites that use tabs. Map navigation arrays directly to tab URLs instead of relying on folder names.
+
+```json
+"tabs": [
+  { "name": "Documentation", "url": "docs" },
+  { "name": "API Reference", "url": "api-reference" }
+],
+"navigation": {
+  "docs": [
+    {
+      "group": "Introduction",
+      "pages": ["welcome", "setup"]
+    }
+  ],
+  "api-reference": [
+    {
+      "group": "Endpoints",
+      "pages": ["api/users", "api/projects"]
+    }
+  ]
+}
+```
+
+Each key in the `navigation` object must match the `url` of a tab defined in `tabs`.
+
+## Raw string format
+
+Pass page slugs directly at the top level without a group header. These pages appear in the sidebar without any section label above them. Can be mixed with groups.
+
+```json
+"navigation": {
+  "docs": [
+    "quickstart/welcome",
+    "quickstart/setup",
+    {
+      "group": "Advanced",
+      "pages": ["advanced/custom-domain"]
+    }
+  ]
+}
+```
+
+## Persistent sidebar items
+
+Use the reserved `"all"` key to define sidebar items that appear on every tab. Useful for support links, community links, or anything that should always be visible.
+
+```json
+"navigation": {
+  "all": [
+    {
+      "group": "Help & Support",
+      "pages": ["support/faq", "support/feedback"]
+    }
+  ],
+  "docs": [
+    {
+      "group": "Getting Started",
+      "pages": ["introduction"]
+    }
+  ],
+  "api-reference": [
+    {
+      "group": "Endpoints",
+      "pages": ["api/users"]
+    }
+  ]
+}
+```
+
+Items in `"all"` are shown at the bottom of the sidebar regardless of which tab is active.
+
+## Nested groups
+
+Groups can be nested to create sub-sections:
+
+```json
+{
+  "group": "Guides",
+  "pages": [
+    "guides/overview",
+    {
+      "group": "Advanced",
+      "pages": ["guides/advanced/custom-domain", "guides/advanced/versioning"]
+    }
+  ]
+}
+```
+
+## Group icons
+
+Add a Lucide icon to any group:
+
+```json
+{
+  "group": "Getting Started",
+  "icon": "BookOpen",
+  "pages": ["introduction", "getting-started"]
+}
+```
+
+<Tip>
+  Browse all available icons at [lucide.dev](https://lucide.dev). Use the exact
+  component name as the `icon` value.
+</Tip>

@@ -74,6 +74,32 @@ Your page content starts here.
   Filter the OpenAPI spec to only show endpoints matching this tag.
 </ResponseField>
 
+<ResponseField name="noIndex" type="boolean">
+  Hide this specific page from search engine indexing. Useful when `seo.indexHiding` is `false` globally but you want certain pages excluded — internal guides, draft pages, or anything not meant for public search results.
+
+```mdx
+---
+title: Internal Guide
+noIndex: true
+---
+```
+
+</ResponseField>
+
+<ResponseField name="ogImage" type="string">
+  A custom Open Graph image for this specific page. Used when the page is shared on social media — overrides the global `seo.og.image` set in `docs.json`.
+
+```mdx
+---
+title: Getting Started
+ogImage: /images/og-getting-started.png
+---
+```
+
+Place the image in folders named `images`, `assets` or `media`. Recommended size is `1200 × 630px`.
+
+</ResponseField>
+
 ## Writing content
 
 Pages support the full Markdown syntax plus all Viabl components.
@@ -110,7 +136,7 @@ _Italic text_
 
 ```mdx
 - Unordered item
-- Another items
+- Another item
   - Nested item
 
 1. First step

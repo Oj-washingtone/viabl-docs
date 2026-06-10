@@ -141,38 +141,29 @@ Custom font configuration for headings and body text.
 
 ## Navigation
 
-The sidebar navigation structure. An array of groups each containing pages or nested groups.
+The sidebar navigation structure. Viabl supports three navigation formats — a simple array of groups, a dictionary mapped to tabs, and raw strings for headerless sidebar items.
 
-<ResponseField name="navigation[].group" type="string" required>
-  Display name of the navigation group shown in the sidebar.
+<ResponseField
+  name="navigation"
+  type="NavigationGroup[] | Record<string, NavigationGroup[]>"
+  required
+>
+  The sidebar navigation structure. Accepts a flat array of groups for simple
+  sites, or a dictionary object mapping tab URLs to navigation arrays for tabbed
+  sites.
 </ResponseField>
 
-<ResponseField name="navigation[].icon" type="string">
-  Icon name shown next to the group label.
-</ResponseField>
-
-<ResponseField name="navigation[].pages" type="string[] | NavigationGroup[]" required>
-  Pages or nested groups inside this group. Pages are slugs relative to the project root with no file extension — `introduction` maps to `introduction.mdx`.
-</ResponseField>
 ```json
 "navigation": [
   {
     "group": "Getting Started",
     "icon": "BookOpen",
     "pages": ["introduction", "getting-started"]
-  },
-  {
-    "group": "Guides",
-    "pages": [
-      "guides/overview",
-      {
-        "group": "Advanced",
-        "pages": ["guides/advanced/custom-domain"]
-      }
-    ]
   }
 ]
 ```
+
+See the [Navigation](/docs/quickstart/navigation) page for all supported formats including dictionary navigation, persistent sidebar items, and raw string pages.
 
 ## Top Bar
 
@@ -238,7 +229,7 @@ Tabs shown below the top navigation bar for switching between major sections.
 </ResponseField>
 
 <ResponseField name="tabs[].url" type="string" required>
-  URL path this tab links to.
+  URL default path that should be open by default when we open the tab.
 </ResponseField>
 
 <ResponseField name="tabs[].icon" type="string">
@@ -250,8 +241,9 @@ Tabs shown below the top navigation bar for switching between major sections.
 </ResponseField>
 ```json
 "tabs": [
-  { "name": "Documentation", "url": "/docs", "icon": "BookOpen" },
-  { "name": "API Reference", "url": "/api-reference", "icon": "Code2" }
+  { "name": "Documentation", "url": "docs", "icon": "BookOpen" },
+  { "name": "API Reference", "url": "api-reference", "icon": "Code2" }
+  {"name": "Feedback", "url": "feedback", "icon": "Code2", "anchor": true }
 ]
 ```
 
@@ -331,8 +323,9 @@ Social media links shown in the footer.
 ## SEO
 
 <ResponseField name="seo.indexHiding" type="boolean">
-  Set to `true` to prevent search engines from indexing your docs. Defaults to
-  `false`.
+  Set to `true` to prevent search engines from indexing your entire docs site.
+  Defaults to `false`. To hide individual pages only, use `noIndex` in page
+  frontmatter.
 </ResponseField>
 
 <ResponseField name="seo.og.title" type="string">
@@ -344,9 +337,16 @@ Social media links shown in the footer.
 </ResponseField>
 
 <ResponseField name="seo.og.image" type="string">
-  Path to the Open Graph image. Example: `/og-image.png`
+  Path to the Open Graph image. Recommended size is `1200 × 630px`.
 </ResponseField>
+
+<ResponseField name="aiScraping" type="boolean">
+  Whether to allow known AI crawlers to index your docs. Defaults to `true`. Set
+  to `false` to block AI bots via the generated `robots.txt`.
+</ResponseField>
+
 ```json
+"aiScraping": false,
 "seo": {
   "indexHiding": false,
   "og": {
@@ -356,6 +356,8 @@ Social media links shown in the footer.
   }
 }
 ```
+
+Viabl also generates a sitemap, `robots.txt`, and `llms.txt` automatically. See the [SEO & Discoverability](/docs/quickstart/seo) page for the full reference.
 
 ## Search
 
@@ -367,6 +369,48 @@ Social media links shown in the footer.
   "prompt": "Search the docs..."
 }
 ```
+
+## AI assistant
+
+Add an AI assistant to your docs that answers user questions grounded in your content.
+
+<ResponseField
+  name="ai.provider"
+  type='"anthropic" | "openai" | "ollama"'
+  required
+>
+  The AI provider to use.
+</ResponseField>
+
+<ResponseField name="ai.apiKey" type="string">
+  Your API key. Supports `${ENV_VAR}` interpolation — never commit keys
+  directly.
+</ResponseField>
+
+<ResponseField name="ai.model" type="string">
+  The model to use for responses.
+</ResponseField>
+
+<ResponseField name="ai.suggestedQuestions" type="string[]">
+  Starter questions shown to users when they open the assistant.
+</ResponseField>
+
+<ResponseField name="ai.rules" type="string[]">
+  Instructions the AI strictly follows when responding.
+</ResponseField>
+
+```json
+"ai": {
+  "provider": "anthropic",
+  "apiKey": "${ANTHROPIC_API_KEY}",
+  "suggestedQuestions": [
+    "How do I get started?",
+    "How do I deploy my docs?"
+  ]
+}
+```
+
+See the [AI Assistant](/docs/quickstart/ai-assistant) page for the full reference including Ollama setup and environment variable usage.
 
 ## Feedback
 

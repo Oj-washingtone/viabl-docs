@@ -1,0 +1,104 @@
+---
+title: SEO & Discoverability
+description: Configure SEO, AI discoverability, sitemaps, and social sharing for your Viabl documentation.
+---
+
+Viabl generates everything needed for your docs to be discoverable — by search engines, AI agents, and social platforms.
+
+## Sitemap
+
+A sitemap is generated automatically at `/sitemap.xml` based on your navigation. No configuration needed. Submit it to Google Search Console to speed up indexing.
+
+## robots.txt
+
+A `robots.txt` is generated at `/robots.txt` automatically. It allows all crawlers by default and references your sitemap.
+
+To block known AI scraping bots, set `aiScraping` to `false` in your `docs.json`:
+
+```json
+{
+  "aiScraping": false
+}
+```
+
+This adds the following rules to your generated `robots.txt`:
+
+```
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+```
+
+<ResponseField name="aiScraping" type="boolean">
+  Whether to allow known AI crawlers to index your documentation. Defaults to
+  `true`. Set to `false` to block AI bots via `robots.txt`.
+</ResponseField>
+
+## llms.txt
+
+Viabl generates an `llms.txt` file at `/llms.txt` — a plain text file that AI agents use to understand your documentation structure. It lists all your pages with their titles and descriptions, making your docs more readable by AI assistants and LLM-powered tools.
+
+No configuration needed — it is generated automatically from your navigation and frontmatter.
+
+## Open Graph
+
+Control how your docs appear when shared on social media. Configure Open Graph metadata in `docs.json`:
+
+```json
+"seo": {
+  "og": {
+    "title": "My Product Docs",
+    "description": "Everything you need to build with My Product.",
+    "image": "/og-image.png"
+  }
+}
+```
+
+Place your OG image at the root of your docs project — a common size is `1200 × 630px`.
+
+<ResponseField name="seo.og.title" type="string">
+  Title shown in social media link previews. Defaults to your `name` field.
+</ResponseField>
+
+<ResponseField name="seo.og.description" type="string">
+  Description shown in social media link previews.
+</ResponseField>
+
+<ResponseField name="seo.og.image" type="string">
+  Path to the Open Graph image. Recommended size is `1200 × 630px`.
+</ResponseField>
+
+## Hiding pages from search engines
+
+To hide your entire documentation from search engine indexing:
+
+```json
+"seo": {
+  "indexHiding": true
+}
+```
+
+To hide a specific page only, add `noIndex` to the page frontmatter:
+
+```mdx
+---
+title: Internal Guide
+description: Internal reference — not for public indexing.
+noIndex: true
+---
+```
+
+<ResponseField name="noIndex" type="boolean">
+  Hide this specific page from search engine indexing. Useful when
+  `seo.indexHiding` is `false` globally but you want certain pages excluded.
+</ResponseField>
+
+<Note>
+  `noIndex: true` in frontmatter works per-page. `seo.indexHiding: true` in
+  `docs.json` applies to your entire documentation site.
+</Note>

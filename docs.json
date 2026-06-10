@@ -37,52 +37,105 @@
     },
     "topbarCtaButton": {
         "name": "Get Started",
-        "url": "/welcome-to-viabl",
+        "url": "/quickstart/welcome-to-viabl",
         "style": "fill",
         "arrow": true,
         "icon": "Rocket",
         "blank": false
     },
-    "navigation": [
+    "topbarLinks": [
         {
-            "group": "Getting Started",
-            "icon": "Rocket",
-            "pages": [
-                "quickstart/welcome-to-viabl",
-                "quickstart/quickstart",
-                "quickstart/configuration",
-                "quickstart/writing-pages"
-            ]
-        },
-        {
-            "group": "Components",
-            "icon": "Layers",
-            "pages": [
-                "components/overview",
-                "components/cards",
-                "components/steps",
-                "components/accordion",
-                "components/tabs",
-                "components/callouts",
-                "components/badge",
-                "components/image",
-                "components/tooltip",
-                "components/expandable",
-                "components/update",
-                "components/response-fields"
-            ]
-        },
-        {
-            "group": "Guides",
-            "icon": "Cloud",
-            "pages": [
-                "guides/overview",
-                "guides/docker",
-                "guides/github-actions",
-                "guides/host-under-subpath"
-            ]
+            "name": "Talk to us",
+            "url": "https://example.com/support",
+            "blank": true
         }
     ],
+    "tabs": [
+        {
+            "name": "Doc",
+            "url": "quickstart",
+            "icon": "BookOpen"
+        },
+        {
+            "name": "Api docs",
+            "url": "api-reference",
+            "icon": "Code2"
+        },
+        {
+            "name": "Feedback",
+            "url": "support",
+            "icon": "Lightbulb",
+            "anchor": true
+        }
+    ],
+    "navigation": {
+        "quickstart": [
+            {
+                "group": "Get started",
+                "icon": "Rocket",
+                "pages": [
+                    "quickstart/welcome-to-viabl",
+                    "quickstart/quickstart",
+                    "quickstart/configuration",
+                    "quickstart/pages",
+                    "quickstart/navigation",
+                    "quickstart/seo",
+                    "quickstart/ai-assistant"
+                ]
+            },
+            {
+                "group": "Components",
+                "icon": "Layers",
+                "pages": [
+                    "components/overview",
+                    "components/cards",
+                    "components/steps",
+                    "components/accordion",
+                    "components/tabs",
+                    "components/callouts",
+                    "components/badge",
+                    "components/image",
+                    "components/tooltip",
+                    "components/expandable",
+                    "components/update",
+                    "components/response-fields"
+                ]
+            },
+            {
+                "group": "Guides",
+                "icon": "Cloud",
+                "pages": [
+                    "guides/overview",
+                    "guides/docker",
+                    "guides/github-actions",
+                    "guides/host-under-subpath"
+                ]
+            }
+        ],
+        "api-reference": [
+            {
+                "group": "Api Rerefence",
+                "icon": "Rocket",
+                "pages": [
+                    "api-reference/overview",
+                    {
+                        "group": "Examples",
+                        "pages": [
+                            "api-reference/authentication",
+                            "api-reference/user-apis",
+                            "api-reference/project"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "support": [
+            "support/feedback"
+        ],
+        "all": [
+            "updates/changelog"
+        ]
+    },
     "footerSocials": {
         "twitter": "https://twitter.com/viablkit",
         "github": "https://github.com/Oj-washingtone/viabl-cli",
@@ -97,6 +150,16 @@
             "description": "Ship Documentation easily with viabl",
             "image": "/images/hero-white.png"
         }
+    },
+    "ai": {
+        "provider": "anthropic",
+        "apiKey": "${ANTHROPIC_API_KEY}",
+        "suggestedQuestions": [
+            "How do i get started with viabl?",
+            "How can i configure and customize my docs ?",
+            "How do i deploy my docs ?"
+        ],
+        "rules": []
     },
     "feedback": {
         "thumbsRating": true,

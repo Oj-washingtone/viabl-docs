@@ -1,0 +1,170 @@
+---
+title: AI Assistant
+description: Add an AI assistant to your documentation that answers questions from your users.
+---
+
+Viabl supports adding an AI assistant directly to your documentation. Users can ask questions and get answers grounded in your docs content. You can use any of the supported providers — Anthropic, OpenAI, or a self-hosted Ollama instance.
+
+## Configuration
+
+Add an `ai` field to your `docs.json`:
+
+```json
+{
+  "$schema": "https://viabl.dev/schema/docs.json",
+  "name": "My Docs",
+  "ai": {
+    "provider": "anthropic",
+    "apiKey": "${ANTHROPIC_API_KEY}",
+    "suggestedQuestions": [
+      "How do I get started?",
+      "What are the system requirements?"
+    ],
+    "rules": [
+      "Always respond in a friendly and concise tone.",
+      "Do not answer questions unrelated to this documentation."
+    ]
+  },
+  "navigation": []
+}
+```
+
+<Note>
+  All fields under `ai` support environment variable interpolation using `$
+  {VAR_NAME}` syntax. This keeps sensitive values like API keys out of your
+  committed `docs.json`.
+</Note>
+
+## Providers
+
+<Tabs>
+  <Tab title="Anthropic">
+```json
+    "ai": {
+      "provider": "anthropic",
+      "apiKey": "${ANTHROPIC_API_KEY}",
+      "model": "claude-sonnet-4-5",
+      "suggestedQuestions": [
+        "How do I install the CLI?",
+        "How do I deploy my docs?"
+      ]
+    }
+```
+  </Tab>
+  <Tab title="OpenAI">
+```json
+    "ai": {
+      "provider": "openai",
+      "apiKey": "${OPENAI_API_KEY}",
+      "model": "gpt-4o",
+      "embeddingModel": "text-embedding-3-small",
+      "suggestedQuestions": [
+        "What components are available?",
+        "How do I configure navigation?"
+      ]
+    }
+```
+  </Tab>
+  <Tab title="Ollama">
+```json
+    "ai": {
+      "provider": "ollama",
+      "endpoint": "http://localhost:11434",
+      "model": "llama3",
+      "embeddingModel": "nomic-embed-text",
+      "suggestedQuestions": [
+        "How do I get started?"
+      ]
+    }
+```
+
+    <Note>
+      `endpoint` is required for Ollama and should point to where your Ollama instance is running. No API key is needed.
+    </Note>
+
+  </Tab>
+</Tabs>
+
+## Fields reference
+
+<ResponseField
+  name="provider"
+  type='"anthropic" | "openai" | "ollama"'
+  required
+>
+  The AI provider to use.
+</ResponseField>
+
+<ResponseField name="apiKey" type="string">
+  Your API key for the provider. Supports environment variable interpolation —
+  use `${YOUR_ENV_VAR}` to keep keys out of your repo. Not required for Ollama.
+</ResponseField>
+
+<ResponseField name="endpoint" type="string">
+  The URL where your Ollama instance is running. Required for Ollama, ignored for other providers.
+
+```json
+  "endpoint": "http://localhost:11434"
+```
+
+</ResponseField>
+
+<ResponseField name="model" type="string">
+  The model to use for generating responses. If not set, the provider default is
+  used.
+</ResponseField>
+
+<ResponseField name="embeddingModel" type="string">
+  The model to use for generating embeddings when indexing your docs content. If
+  not set, the provider default is used.
+</ResponseField>
+
+<ResponseField name="suggestedQuestions" type="string[]">
+  A list of starter questions shown to users when they first open the assistant. Helps users understand what they can ask.
+
+```json
+  "suggestedQuestions": [
+    "How do I install the CLI?",
+    "What MDX components are available?",
+    "How do I deploy my docs?"
+  ]
+```
+
+</ResponseField>
+
+<ResponseField name="rules" type="string[]">
+  Instructions the AI strictly follows when responding. Use this to constrain tone, scope, or behavior.
+
+```json
+  "rules": [
+    "Only answer questions related to this documentation.",
+    "Always suggest the user check the relevant docs page.",
+    "Respond in English only."
+  ]
+```
+
+</ResponseField>
+
+## Environment variables
+
+All fields under `ai` accept environment variable references using `${VAR_NAME}` syntax. This applies to `apiKey`, `endpoint`, `model`, `embeddingModel`, and even individual entries inside `suggestedQuestions` and `rules`.
+
+Create a `.env` file at your project root:
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Then reference it in `docs.json`:
+
+```json
+"ai": {
+  "provider": "anthropic",
+  "apiKey": "${ANTHROPIC_API_KEY}"
+}
+```
+
+<Warning>
+  Never commit API keys directly to your `docs.json`. Always use environment
+  variable references and add your `.env` file to `.gitignore`.
+</Warning>

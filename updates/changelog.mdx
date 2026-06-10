@@ -1,0 +1,82 @@
+---
+title: Changelog
+description: What's new in Viabl.
+---
+
+<Update label="v1.1.4" description="June 2026">
+**AI assistant**
+
+You can now add an AI assistant to your documentation. Configure a provider in `docs.json` and your users get a chat interface grounded in your docs content. Supports Anthropic, OpenAI, and self-hosted Ollama.
+
+```json
+  "ai": {
+    "provider": "anthropic",
+    "apiKey": "${ANTHROPIC_API_KEY}",
+    "suggestedQuestions": ["How do I get started?"]
+  }
+```
+
+All fields under `ai` support `${ENV_VAR}` interpolation to keep keys out of your repo.
+
+**SEO and AI discoverability**
+
+Viabl now generates a sitemap, `llms.txt`, and `robots.txt` automatically. Added `aiScraping` to `docs.json` to block known AI crawlers. Added `noIndex` frontmatter field to hide individual pages from search engines. Improved Open Graph support with proper image generation for social sharing.
+
+**Navigation improvements**
+
+The navigation configuration now supports three formats — legacy array, dictionary mapped to tabs, and raw string format for headerless sidebar items. Added `"all"` as a reserved key for persistent sidebar items that appear on every tab.
+
+**Telemetry**
+
+Viabl now collects anonymous usage data to help improve the tool. Telemetry is enabled by default and can be opted out at any time.
+
+```bash
+  viabl telemetry disable
+```
+
+To check the current status:
+
+```bash
+  viabl telemetry status
+```
+
+No personal information, file contents, or project names are ever collected. Only CLI commands, versions, platform info, and success/failure signals are tracked.
+
+</Update>
+
+<Update label="v0.1.4" description="May 2026">
+**VIbal server and render**
+
+- base url, for reverse proxying and og image in the frontmatter
+- url field for OG sharing sitemaps and llm
+- Disabled watcher for production environment, only allowed for dev mode only
+
+</Update>
+
+<Update label="v0.1.3" description="April 2026">
+  **Windows support**
+
+Fixed docs not running on Windows by replacing the native `spawn` with `cross-spawn`. This resolves path and shell compatibility issues on Windows systems.
+
+**viable server improvements**
+
+Streamlined content server initialisation and adjusted TypeScript compiler configuration for better compatibility across platforms.
+
+</Update>
+
+<Update label="v0.1.2" description="April 2026">
+  add packaging for renderer sources and update release step to include all
+  assetss
+</Update>
+
+<Update label="v0.1.0" description="March 2026">
+  Initial release of Viabl.
+
+  <Check>CLI with `viabl dev`, `viabl build`, `viabl start`, `viabl update`</Check>
+  <Check>MDX-based documentation with live reload</Check>
+  <Check>Full-text search across all pages and sections</Check>
+  <Check>OpenAPI support — generate API reference from a spec file</Check>
+  <Check>Version switcher for multi-version documentation</Check>
+  <Check>Dark and light mode</Check>
+  <Check>Self-hosted — deploy anywhere Node.js runs</Check>
+</Update>

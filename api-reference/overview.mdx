@@ -1,0 +1,321 @@
+---
+title: API Reference
+description: Document your API using OpenAPI specifications in Viabl.
+---
+
+Viabl can render a beautiful, interactive API reference directly from your OpenAPI specification. Point to your spec file in page frontmatter and Viabl handles the rest — endpoints, parameters, request and response schemas, and authentication are all rendered automatically.
+
+## Quick start
+
+Place your OpenAPI spec at the root of your docs project:
+
+```
+my-docs/
+├── docs.json
+├── introduction.mdx
+└── openapi.yaml       ← your spec file
+```
+
+Create an MDX page and point to it using the `openapi` frontmatter field:
+
+```mdx
+---
+title: API Reference
+openapi: /openapi.yaml
+---
+```
+
+Register the page in your `docs.json` navigation:
+
+```json
+"navigation": [
+  {
+    "group": "Getting Started",
+    "pages": ["introduction"]
+  },
+  {
+    "group": "API Reference",
+    "pages": ["api-reference"]
+  }
+]
+```
+
+That is all. Viabl reads your spec and renders the full API reference on that page.
+
+## Supported formats
+
+Both YAML and JSON spec files are supported:
+
+```mdx
+---
+title: API Reference
+openapi: /openapi.yaml
+---
+```
+
+```mdx
+---
+title: API Reference
+openapi: /openapi.json
+---
+```
+
+Place the file anywhere in your project root and reference it with an absolute path from the root.
+
+## Filtering by tag
+
+For large APIs it is cleaner to split the reference into multiple pages — one per tag. Use the `openapiTag` frontmatter field to filter the spec to a specific tag:
+
+```mdx
+---
+title: Users
+openapi: /openapi.yaml
+openapiTag: Users
+---
+```
+
+```mdx
+---
+title: Projects
+openapi: /openapi.yaml
+openapiTag: Projects
+---
+```
+
+Each page renders only the endpoints matching that tag. Register them individually in your navigation:
+
+```json
+{
+  "group": "API Reference",
+  "pages": [
+    "api-reference/overview",
+    "api-reference/users",
+    "api-reference/projects",
+    "api-reference/billing"
+  ]
+}
+```
+
+<Tip>
+  Tag your endpoints in the spec itself using the `tags` field on each operation. The `openapiTag` value must match the tag name exactly.
+</Tip>
+
+## Frontmatter fields
+
+<ResponseField name="openapi" type="string">
+  Path to your OpenAPI spec file relative to the project root. Supports both `.yaml` and `.json` formats.
+
+```mdx
+---
+
+title: API Reference
+openapi: /openapi.yaml
+
+---
+```
+
+</ResponseField>
+
+<ResponseField name="openapiTag" type="string">
+  Filter the spec to only show endpoints matching this tag. The value must match a tag name defined in your spec exactly — it is case sensitive.
+
+```mdx
+---
+
+title: Users API
+openapi: /openapi.yaml
+openapiTag: Users
+
+---
+```
+
+</ResponseField>
+
+<Warning>
+  When `openapi` is set in frontmatter, any MDX content below the frontmatter block is ignored. The entire page body is replaced by the rendered API reference.
+</Warning>
+
+## Example spec structure
+
+A minimal OpenAPI spec that works well with Viabl:
+
+```yaml
+openapi: 3.0.3
+
+info:
+  title: My API
+  description: API documentation for My Product
+  version: 1.0.0
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production
+
+tags:
+  - name: Users
+    description: User management endpoints
+  - name: Projects
+    description: Project management endpoints
+
+paths:
+  /users:
+    get:
+      tags: [Users]
+      summary: List users
+      description: Returns a paginated list of all users.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  total:
+                    type: integer
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: usr_01abc123
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        name:
+          type: string
+          example: Jane Smith
+        createdAt:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+```
+
+## Mixing API and prose pages
+
+You can mix OpenAPI pages with regular MDX pages in the same navigation group. A common pattern is to have an overview page followed by the API reference:
+
+```json
+{
+  "group": "API Reference",
+  "pages": [
+    "api-reference/overview",
+    "api-reference/authentication",
+    "api-reference/errors",
+    "api-reference/users",
+    "api-reference/projects"
+  ]
+}
+```
+
+Where `overview.mdx`, `authentication.mdx`, and `errors.mdx` are regular MDX pages covering concepts, and `users.mdx` and `projects.mdx` are OpenAPI pages using the `openapi` frontmatter field.
+
+## Authentication
+
+Define authentication schemes in your spec using `securitySchemes` and Viabl renders them automatically in the API reference:
+
+```yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+security:
+  - bearerAuth: []
+```
+
+You can also apply security schemes per endpoint to override the global setting:
+
+```yaml
+paths:
+  /public/status:
+    get:
+      summary: Health check
+      security: [] # ← no auth required for this endpoint
+```
+
+## Multiple spec files
+
+You can use different spec files on different pages — useful when you have multiple APIs or versioned specs:
+
+```mdx
+---
+title: v1 API Reference
+openapi: /openapi-v1.yaml
+---
+```
+
+```mdx
+---
+title: v2 API Reference
+openapi: /openapi-v2.yaml
+---
+```
+
+Both files should be placed at the project root.
+
+## What gets rendered
+
+Viabl renders the following from your OpenAPI spec:
+
+<Check>All endpoints grouped by tag</Check>
+<Check>HTTP method and path for each endpoint</Check>
+<Check>Summary and description</Check>
+<Check>Path, query, header, and cookie parameters</Check>
+<Check>Request body schema with field types and descriptions</Check>
+<Check>Response schemas for all status codes</Check>
+<Check>Authentication requirements</Check>
+<Check>Example values from the spec</Check>

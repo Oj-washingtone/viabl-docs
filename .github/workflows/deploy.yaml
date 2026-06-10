@@ -8,10 +8,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -29,13 +32,19 @@ jobs:
       - name: Build docs
         run: viabl build
 
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          EOF
+
       - name: Copy build to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: ".viabl/,Dockerfile"
+          source: ".viabl/,Dockerfile,.env"
           target: "/opt/viabl/viabl-docs"
           rm: true
 
@@ -47,12 +56,17 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/viabl/viabl-docs
+
             docker build -t viabl-docs .
+
             docker rm -f viabl-docs || true
+
             docker run -d \
               --name viabl-docs \
               --restart unless-stopped \
               -p 7777:7777 \
+              --env-file .env \
               -e PORT=7777 \
               viabl-docs
+
             docker image prune -f
