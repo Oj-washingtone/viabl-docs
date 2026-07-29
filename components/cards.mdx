@@ -14,7 +14,7 @@ The `Card` and `CardGroup` components provide a flexible way to present content 
 
 ## Example
 
-<CardGroup cols={2}>
+<CardGroup cols="2">
   <Card title="Getting Started" icon="Rocket" href="/introduction">
     Get up and running quickly.
   </Card>
@@ -30,13 +30,13 @@ The `Card` and `CardGroup` components provide a flexible way to present content 
 A responsive grid layout for organizing multiple Card components.
 
 <Tabs>
+  <Tab title="Output">
+    <Card title="Getting Started">Get up and running quickly.</Card>
+  </Tab>
   <Tab title="Code">
     ```mdx
     <Card title="Getting Started">Get up and running quickly.</Card>
     ````
-  </Tab>
-  <Tab title="Output">
-    <Card title="Getting Started">Get up and running quickly.</Card>
   </Tab>
 </Tabs>
 
@@ -45,6 +45,11 @@ A responsive grid layout for organizing multiple Card components.
 Icons are resolved dynamically from lucide-react. If the icon name is not found, the value will be rendered as plain text or emoji:
 
 <Tabs>
+  <Tab title="Output">
+    <Card title="Getting Started" icon="BarChart3">
+      Get up and running quickly.
+    </Card>
+  </Tab>
   <Tab title="Code">
     ```mdx
     <Card title="Analytics" icon="BarChart3">
@@ -52,11 +57,7 @@ Icons are resolved dynamically from lucide-react. If the icon name is not found,
     </Card>
     ```
   </Tab>
-  <Tab title="Output">
-    <Card title="Analytics" icon="BarChart3">
-      View insights and metrics.
-    </Card>
-  </Tab>
+  x
 </Tabs>
 
 ## CardGroup
@@ -64,18 +65,6 @@ Icons are resolved dynamically from lucide-react. If the icon name is not found,
 A responsive grid layout for organizing multiple Card components.
 
 <Tabs>
-  <Tab title="Code">
-    ```mdx
-    <CardGroup cols={2}>
-      <Card title="Getting Started" icon="Rocket" href="/introduction">
-        Get up and running quickly.
-      </Card>
-      <Card title="API Reference" icon="Code2" href="/api-reference/overview">
-        Explore all available endpoints.
-      </Card>
-    </CardGroup>
-    ```
-  </Tab>
   <Tab title="Output">
     <CardGroup cols={2}>
       <Card title="Getting Started" icon="Rocket" href="/introduction">
@@ -85,6 +74,18 @@ A responsive grid layout for organizing multiple Card components.
         Explore all available endpoints.
       </Card>
     </CardGroup>
+  </Tab>
+  <Tab title="Code">
+    ```mdx
+    <CardGroup cols="2">
+      <Card title="Getting Started" icon="Rocket" href="/introduction">
+        Get up and running quickly.
+      </Card>
+      <Card title="API Reference" icon="Code2" href="/api-reference/overview">
+        Explore all available endpoints.
+      </Card>
+    </CardGroup>
+    ```
   </Tab>
 </Tabs>
 

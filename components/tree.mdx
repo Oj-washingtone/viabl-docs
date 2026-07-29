@@ -1,0 +1,181 @@
+---
+title: File Tree
+description: Display directory structures and file hierarchies using Tree, Tree.Folder, and Tree.File components or markdown lists.
+---
+
+## Overview
+
+The `Tree` (or `FileTree`) component provides an interactive directory tree viewer for displaying project files and folder structures. It features automatic extension-based file icons, collapsible folders, keyboard navigation, and markdown list parsing.
+
+- **Tree** (or **FileTree**): Root container box for the file tree viewer.
+- **Tree.Folder**: Collapsible folder component that can contain nested folders and files.
+- **Tree.File**: Individual file item with automatic file extension icon resolution.
+
+---
+
+## Example
+
+<Tree>
+  <Tree.Folder name="src" defaultOpen>
+    <Tree.Folder name="components" defaultOpen>
+      <Tree.File name="Button.tsx" />
+      <Tree.File name="Card.tsx" />
+    </Tree.Folder>
+    <Tree.File name="App.tsx" />
+    <Tree.File name="main.tsx" />
+  </Tree.Folder>
+  <Tree.File name="package.json" />
+  <Tree.File name="README.md" />
+</Tree>
+
+---
+
+## Tree
+
+A container layout for displaying directory trees. You can construct trees using JSX components (`Tree.Folder`, `Tree.File`) or by nesting standard markdown lists inside `<Tree>`.
+
+<Tabs>
+  <Tab title="Output">
+    <Tree>
+      <Tree.Folder name="app" defaultOpen>
+        <Tree.File name="layout.tsx" />
+        <Tree.File name="page.tsx" />
+        <Tree.File name="globals.css" />
+      </Tree.Folder>
+      <Tree.File name="next.config.js" />
+      <Tree.File name="package.json" />
+    </Tree>
+  </Tab>
+  <Tab title="Code">
+````mdx
+<Tree>
+  <Tree.Folder name="app" defaultOpen>
+    <Tree.File name="layout.tsx" />
+    <Tree.File name="page.tsx" />
+    <Tree.File name="globals.css" />
+  </Tree.Folder>
+  <Tree.File name="next.config.js" />
+  <Tree.File name="package.json" />
+</Tree>
+`````
+
+  </Tab>
+</Tabs>
+
+## Markdown List Syntax
+
+You can also construct file trees by nesting standard Markdown bulleted lists directly inside `<Tree>`. End folder names with a slash (`/`) to specify explicit folders:
+
+<Tabs>
+  <Tab title="Output">
+    <Tree>
+
+      - project/
+        - src/
+            - index.ts
+            - styles.css
+            - package.json
+            - README.md
+
+
+    </Tree>
+
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Tree>
+      - project/ 
+        - src/ 
+            - index.ts 
+            - styles.css 
+            - package.json 
+            - README.md
+    </Tree>
+    ````
+  </Tab>
+</Tabs>
+
+## Tree.Folder
+
+Collapsible folder container that holds nested files and subfolders.
+
+<Tabs>
+  <Tab title="Output">
+    <Tree>
+      <Tree.Folder name="components" defaultOpen>
+        <Tree.File name="Header.tsx" />
+        <Tree.File name="Footer.tsx" />
+      </Tree.Folder>
+      <Tree.Folder name="utils">
+        <Tree.File name="format.ts" />
+      </Tree.Folder>
+    </Tree>
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Tree>
+      <Tree.Folder name="components" defaultOpen>
+        <Tree.File name="Header.tsx" />
+        <Tree.File name="Footer.tsx" />
+      </Tree.Folder>
+      <Tree.Folder name="utils">
+        <Tree.File name="format.ts" />
+      </Tree.Folder>
+    </Tree>
+    ````
+  </Tab>
+</Tabs>
+
+## Tree.File
+
+Individual file item inside a tree layout. Automatically renders color-coded icons based on file extension (`.ts`/`.tsx`, `.json`/`.yaml`, `.css`, `.md`).
+
+<Tabs>
+  <Tab title="Output">
+    <Tree>
+      <Tree.File name="index.ts" />
+      <Tree.File name="schema.json" />
+      <Tree.File name="style.css" />
+      <Tree.File name="docs.md" />
+    </Tree>
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Tree>
+      <Tree.File name="index.ts" />
+      <Tree.File name="schema.json" />
+      <Tree.File name="style.css" />
+      <Tree.File name="docs.md" />
+    </Tree>
+    ````
+  </Tab>
+</Tabs>
+
+## Props
+
+**Tree component**
+
+| Prop       | Type              | Default | Description                                                                             |
+| :--------- | :---------------- | :------ | :-------------------------------------------------------------------------------------- |
+| `children` | `React.ReactNode` | Yes     | `Tree.Folder`, `Tree.File` components or a nested markdown bullet list (`<ul>`/`<li>`). |
+
+**Tree.Folder component**
+
+| Prop          | Type              | Default | Description                                                              |
+| :------------ | :---------------- | :------ | :----------------------------------------------------------------------- |
+| `name`        | `string`          | Yes     | The folder display label.                                                |
+| `defaultOpen` | `boolean`         | `false` | When `true`, renders the folder expanded by default.                     |
+| `openable`    | `boolean`         | `true`  | When `false`, prevents users from collapsing or expanding the folder.    |
+| `children`    | `React.ReactNode` | No      | Child `Tree.Folder` or `Tree.File` elements contained within the folder. |
+
+**Tree.File component**
+
+| Prop   | Type     | Required | Description                                                  |
+| :----- | :------- | :------- | :----------------------------------------------------------- |
+| `name` | `string` | Yes      | The file name (file extension determines the icon rendered). |
+
+## Accessibility & Features
+
+- **Automatic File Icons**: Automatically renders color-coded Lucide file icons for TypeScript/JavaScript (`.ts`, `.tsx`, `.js`), config files (`.json`, `.yaml`, `.env`), styles (`.css`), and markdown (`.md`).
+- **Keyboard Navigation**: Press `Enter` or `Space` to toggle folders, `ArrowRight` to open, and `ArrowLeft` to collapse.
+- **Component Aliases**: Support for both `<Tree>` and `<FileTree>`, as well as dot-notation (`<Tree.Folder>`) and named exports (`<TreeFolder>`).

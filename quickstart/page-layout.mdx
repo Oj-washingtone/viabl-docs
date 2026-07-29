@@ -1,0 +1,111 @@
+---
+title: Page Layouts & Sidebar
+description: Configure page layouts, control sidebar visibility, and manage content width using MDX frontmatter or docs.json tabs.
+---
+
+## Overview
+
+Viabl allows you to customize the layout, sidebar visibility, content width, and Table of Contents (ToC) for individual documentation pages or entire tab sections.
+
+Layouts can be configured at two levels:
+
+1. **Per-Page Frontmatter**: Set in the YAML frontmatter at the top of any `.mdx` file (takes highest priority).
+2. **Tab-Level Configuration**: Set inside `docs.json` under `tabs` (applies to all pages under that tab).
+
+---
+
+## Frontmatter Configuration
+
+Add `layout`, `sidebar`, or `toc` to the YAML frontmatter block at the top of your `.mdx` file:
+
+```yaml
+---
+title: Feature Showcase
+description: A full-width grid layout without a sidebar.
+layout: grid
+sidebar: false
+toc: false
+---
+```
+
+---
+
+## Layout Modes
+
+Viabl supports four layout modes:
+
+| Layout Mode | Sidebar Visible | ToC Visible | Max Content Width | Best Used For                                                   |
+| :---------- | :-------------: | :---------: | :---------------- | :-------------------------------------------------------------- |
+| `default`   |       Yes       |     Yes     | `max-w-3xl`       | Standard documentation articles, guides, and tutorials.         |
+| `full`      |       No        |     No      | `max-w-6xl`       | Full-width dashboards, wide data tables, and embedded previews. |
+| `grid`      |       No        |     No      | `max-w-6xl`       | Feature galleries, card groups, and overview catalogs.          |
+| `landing`   |       No        |     No      | `max-w-6xl`       | Product homepages, landing pages, and marketing overviews.      |
+
+---
+
+## Hiding the Sidebar
+
+To hide the left navigation sidebar for an individual page, set `sidebar: false` in frontmatter:
+
+```yaml
+---
+title: Architecture Diagram
+sidebar: false
+---
+```
+
+<Note>
+  **Automatic Width Scaling**: When `sidebar: false` is applied to a page using
+  the `default` layout, the central content container automatically expands from
+  `max-w-3xl` to `max-w-4xl` for an optimal single-column reading experience.
+</Note>
+---
+
+## Controlling Table of Contents
+
+To hide the right-side Table of Contents panel for a specific page:
+
+```yaml
+---
+title: Quick Release Note
+toc: false
+---
+```
+
+---
+
+## Tab-Level Layouts in `docs.json`
+
+Set default layouts for entire sections using the `tabs` array in your `docs.json` file:
+
+```json
+{
+  "tabs": [
+    {
+      "name": "Documentation",
+      "url": "/docs",
+      "layout": "sidebar"
+    },
+    {
+      "name": "API Reference",
+      "url": "/api-reference",
+      "layout": "api"
+    },
+    {
+      "name": "Showcase",
+      "url": "/showcase",
+      "layout": "grid"
+    }
+  ]
+}
+```
+
+---
+
+## Priority & Resolution Order
+
+Page layouts are resolved using the following precedence:
+
+1. **MDX Page Frontmatter** (`layout: "full"`, `sidebar: false`) — _Highest Priority_
+2. **`docs.json` Tab Configuration** (`tabs[].layout`)
+3. **Default Layout** (`layout: "default"` with sidebar visible) — _Fallback_

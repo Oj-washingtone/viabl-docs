@@ -1,0 +1,170 @@
+---
+title: Color
+description: Display design system palettes, brand colors, and theme tokens using Color, Color.Row, and Color.Item components.
+---
+
+## Overview
+
+The `Color`, `Color.Row`, and `Color.Item` components provide a visual showcase for brand colors, design system tokens, and theme-aware color palettes. Swatches feature automatic click-to-copy functionality for instant developer workflow integration.
+
+- **Color**: The top-level grid or table wrapper container.
+- **Color.Row**: A categorized group container for organizing swatches into named sections.
+- **Color.Item**: An individual color swatch displaying a visual preview, token name, hex/RGB values, and copy feedback.
+
+---
+
+## Example
+
+<Color>
+  <Color.Item name="Primary 500" value="#3B82F6" />
+  <Color.Item name="Emerald 500" value="#10B981" />
+  <Color.Item name="Amber 500" value="#F59E0B" />
+  <Color.Item name="Rose 500" value="#F43F5E" />
+</Color>
+
+---
+
+## Color
+
+The main container component. Supports two layout variants: `"compact"` (a 4-column responsive grid) and `"table"` (a grouped card container for `<Color.Row>` items).
+
+`Color.Item` -- Individual color swatch blocks. Accepts standard color strings (Hex, RGB, HSL) or theme-aware object pairs for light/dark mode tokens.
+
+<Tabs>
+  <Tab title="Output">
+    <Color variant="compact">
+      <Color.Item name="Brand Blue" value="#2563EB" />
+      <Color.Item name="Brand Dark" value="#0F172A" />
+    </Color>
+  </Tab>
+  <Tab title="Code">
+    ```mdx
+    <Color variant="compact">
+      <Color.Item name="Brand Blue" value="#2563EB" />
+      <Color.Item name="Brand Dark" value="#0F172A" />
+    </Color>
+    ```
+  </Tab>
+</Tabs>
+
+### Theme-Aware Colors
+
+Pass an object with light and dark properties to value to display theme-responsive design tokens. A 135° split gradient preview will render automatically:
+
+<Tabs>
+  <Tab title="Output">
+  <Color>
+  <Color.Item
+    name="Background"
+    light="#ffffff"
+    dark="#090d16"
+  />
+  <Color.Item
+    name="Card Surface"
+    light="#f8fafc"
+    dark="#1e293b"
+  />
+  <Color.Item
+    name="Text Primary"
+    light="#0f172a"
+    dark="#f8fafc"
+  />
+  <Color.Item
+    name="Border"
+    light="#e2e8f0"
+    dark="#334155"
+  />
+</Color>
+
+  </Tab>
+  <Tab title="Code">
+  ```mdx
+  <Color>
+  <Color.Item
+    name="Background"
+    light="#ffffff"
+    dark="#090d16"
+  />
+  <Color.Item
+    name="Card Surface"
+    light="#f8fafc"
+    dark="#1e293b"
+  />
+  <Color.Item
+    name="Text Primary"
+    light="#0f172a"
+    dark="#f8fafc"
+  />
+  <Color.Item
+    name="Border"
+    light="#e2e8f0"
+    dark="#334155"
+  />
+</Color>
+```
+  </Tab>
+</Tabs>
+
+### Color.Row
+
+Group related color swatches under a category heading inside a table-variant container.
+
+<Tabs>
+  <Tab title="Output">
+    <Color variant="table">
+      <Color.Row title="Primary Tokens">
+        <Color.Item name="Primary / 500" value="#3B82F6" />
+        <Color.Item name="Primary / 600" value="#2563EB" />
+      </Color.Row>
+      <Color.Row title="Theme Backgrounds">
+        <Color.Item name="Background" light="#ffffff" dark="#090d16" />
+        <Color.Item name="Surface" light="#f8fafc" dark="#1e293b" />
+      </Color.Row>
+    </Color>
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Color variant="table">
+      <Color.Row title="Primary Tokens">
+        <Color.Item name="Primary / 500" value="#3B82F6" />
+        <Color.Item name="Primary / 600" value="#2563EB" />
+      </Color.Row>
+      <Color.Row title="Theme Backgrounds">
+        <Color.Item name="Background" light="#ffffff" dark="#090d16" />
+        <Color.Item name="Surface" light="#f8fafc" dark="#1e293b" />
+      </Color.Row>
+    </Color>
+    ````
+  </Tab>
+</Tabs>
+
+## Props
+
+**Color component**
+
+| Prop       | Type                   | Default     | Description                                                                                   |
+| :--------- | :--------------------- | :---------- | :-------------------------------------------------------------------------------------------- |
+| `variant`  | `"compact" \| "table"` | `"compact"` | Overall container style (`"compact"` for a grid layout, `"table"` for categorized card rows). |
+| `children` | `React.ReactNode`      | Yes         | The `Color.Item` or `Color.Row` components to render inside.                                  |
+
+**Color.Item component**
+
+| Prop    | Type     | Required | Description                                                        |
+| :------ | :------- | :------- | :----------------------------------------------------------------- |
+| `name`  | `string` | Yes      | The label or token name displayed on the swatch.                   |
+| `value` | `string` | No       | Single Hex, RGB, or HSL color string (e.g. `"#3B82F6"`).           |
+| `light` | `string` | No       | Light mode color string for theme-aware tokens (e.g. `"#ffffff"`). |
+| `dark`  | `string` | No       | Dark mode color string for theme-aware tokens (e.g. `"#090d16"`).  |
+
+**Color.Row component**
+
+| Prop       | Type              | Required | Description                                                |
+| :--------- | :---------------- | :------- | :--------------------------------------------------------- |
+| `title`    | `string`          | Yes      | Section title heading displayed above the row of swatches. |
+| `children` | `React.ReactNode` | Yes      | `Color.Item` swatches to group under this row.             |
+
+## Accessibility Notes
+
+- Clicking any Color.Item automatically copies the color string (or value.light) to the clipboard.
+- Visual checkmark feedback is briefly displayed upon successful copying.
+- Ensure color contrast ratios meet WCAG standards when choosing token pairs.

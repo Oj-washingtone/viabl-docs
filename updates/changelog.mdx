@@ -3,6 +3,31 @@ title: Changelog
 description: What's new in Viabl.
 ---
 
+<Update label="v1.2.0" description="July 2026">
+**New MDX components & design tokens**
+
+Added `<Color>`, `<Color.Row>`, and `<Color.Item>` components to showcase brand colors and design system tokens. Features click-to-copy clipboard functionality with visual feedback overlays, support for direct string props (`light` and `dark`), and side-by-side preview panels for theme-aware color pairs.
+
+Added `<Tree>` and `<FileTree>` components to render interactive file hierarchies with automatic extension-based file icons, collapsible folders (`Tree.Folder`), file items (`Tree.File`), keyboard navigation, and direct Markdown bullet list parsing.
+
+**Platform targeting & download controls**
+
+Added `<Platform>` component to conditionally render OS-specific content based on browser detection or user selection.
+
+Added `<PlatformSelector>` component for toggling active operating systems using tab bar or dropdown variants with smooth icon animations.
+
+Added `<Download>` component to render platform-aware download buttons with customizable styles (`"block"`, `"outline"`, `"soft"`, `"ghost"`), colors, sizes, corner radius, and Lucide icons.
+
+**Page layouts & sidebar customization**
+
+Support for custom layout modes (`default`, `full`, `grid`, `landing`) in MDX frontmatter or `docs.json` tabs. Added `sidebar: false` frontmatter option to hide the left sidebar with automatic content width scaling from 3xl to 4xl.
+
+**Global announcement banner**
+
+Added `banner` configuration in `docs.json` to display global announcement bars with Markdown link support, predefined alert types (`info`, `warning`, `critical`), custom background colors, and persistent dismissibility.
+
+</Update>
+
 <Update label="v1.1.4" description="June 2026">
 **AI assistant**
 

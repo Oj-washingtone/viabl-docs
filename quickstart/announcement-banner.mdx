@@ -1,0 +1,114 @@
+---
+title: Announcement Banner
+description: Display global site-wide announcement bars using docs.json.
+---
+
+## Overview
+
+The `banner` configuration allows you to display a prominent announcement bar across the top of your entire documentation site. It supports Markdown links, dismissibility with local storage persistence, predefined alert types, and custom background colors.
+
+---
+
+## Configuration in `docs.json`
+
+Add the `banner` object to the root level of your `docs.json` configuration file:
+
+```json
+{
+  "name": "My Documentation",
+  "banner": {
+    "content": "🚀 Viabl v2.0 is now live! [Read the changelog](/changelog)",
+    "dismissible": true,
+    "type": "info"
+  }
+}
+```
+
+---
+
+## Features & Options
+
+### 1. Inline Markdown Links
+
+You can include Markdown links directly inside the `content` string. Links are automatically converted to clickable navigation elements:
+
+```json
+{
+  "banner": {
+    "content": "🎉 We just launched v3.0! Check out the [migration guide](/migration)."
+  }
+}
+```
+
+### 2. Dismissible Banners
+
+Set `"dismissible": true` to display an "X" close button. When a visitor dismisses the banner, the state is persisted in `localStorage` so the banner remains hidden for them on future visits:
+
+```json
+{
+  "banner": {
+    "content": "System maintenance scheduled for Sunday at 02:00 UTC.",
+    "dismissible": true
+  }
+}
+```
+
+### 3. Predefined Banner Types
+
+Choose from three built-in visual styles:
+
+| Type         | Visual Style | Best Used For                                                 |
+| :----------- | :----------- | :------------------------------------------------------------ |
+| `"info"`     | Blue         | Feature announcements, release notes, and general updates.    |
+| `"warning"`  | Amber        | Deprecation notices, scheduled maintenance, or beta warnings. |
+| `"critical"` | Red          | Outages, urgent breaking changes, or security alerts.         |
+
+```json
+{
+  "banner": {
+    "content": "⚠️ Version 1.x will be deprecated on December 31st.",
+    "type": "warning",
+    "dismissible": true
+  }
+}
+```
+
+### 4. Custom Colors
+
+Override default colors by specifying a custom hex color string or a theme-aware light/dark color object:
+
+**Single Custom Color**
+
+```json
+{
+  "banner": {
+    "content": "✨ Check out our brand new design system!",
+    "color": "#8B5CF6"
+  }
+}
+```
+
+**Theme-Aware Colors**
+
+```json
+{
+  "banner": {
+    "content": "✨ Special announcement for all users!",
+    "color": {
+      "light": "#4F46E5",
+      "dark": "#6366F1"
+    }
+  }
+}
+```
+
+---
+
+## Schema Reference
+
+| Field         | Type                                          | Required | Default  | Description                                                                          |
+| :------------ | :-------------------------------------------- | :------: | :------: | :----------------------------------------------------------------------------------- |
+| `content`     | `string`                                      | **Yes**  |    —     | Banner text message. Supports inline markdown links `[text](url)`.                   |
+| `dismissible` | `boolean`                                     |    No    | `false`  | When `true`, displays a close button and persists dismissal state in `localStorage`. |
+| `type`        | `"info" \| "warning" \| "critical"`           |    No    | `"info"` | Predefined visual style variant.                                                     |
+| `color`       | `string \| { light?: string; dark?: string }` |    No    |    —     | Custom hex background color or theme-aware light/dark color pair.                    |

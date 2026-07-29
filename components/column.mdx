@@ -1,0 +1,188 @@
+---
+title: Columns
+description: Create flexible, responsive multi-column layouts and sticky side-by-side content using Columns and Column components.
+---
+
+## Overview
+
+The `Columns` and `Column` components provide a grid system for structuring documentation pages. They allow you to place text, code blocks, cards, and media side-by-side with responsive breakpoint controls.
+
+- **Columns**: A responsive grid container that manages column count, gap spacing, and vertical alignment.
+- **Column**: An individual content wrapper with support for column spanning and sticky positioning.
+
+---
+
+## Example
+
+<Columns cols={2} gap="gap-6">
+  <Column>
+    ### Left Column
+
+    Add Markdown text, lists, or components on the left.
+
+  </Column>
+  <Column>
+    ### Right Column
+
+    Pair with code blocks, media, or sticky sidebars on the right.
+
+  </Column>
+</Columns>
+
+---
+
+## Columns
+
+The container component that defines the grid structure, column count, spacing, and vertical alignment for child columns.
+
+<Tabs>
+  <Tab title="Output">
+    <Columns cols={2} gap="gap-6" align="start">
+      <Column>Content for Column 1</Column>
+      <Column>Content for Column 2</Column>
+    </Columns>
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Columns cols={2} gap="gap-6" align="start">
+      <Column>Content for Column 1</Column>
+      <Column>Content for Column 2</Column>
+    </Columns>
+    ````
+  </Tab>
+</Tabs>
+
+### Alignment & Spacing
+
+Customize vertical alignment across columns with the `align` prop (`start`, `center`, `end`, `stretch`) and adjust column spacing with Tailwind `gap` utilities:
+
+<Tabs>
+
+ <Tab title="Output">
+    <Columns cols={3} gap="gap-8" align="center">
+      <Column>Top or Centered Text</Column>
+      <Column>Middle Content</Column>
+      <Column>Right Content</Column>
+    </Columns>
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Columns cols={3} gap="gap-8" align="center">
+      <Column>Top or Centered Text</Column>
+      <Column>Middle Content</Column>
+      <Column>Right Content</Column>
+    </Columns>
+    ````
+  </Tab>
+ 
+</Tabs>
+
+---
+
+## Column
+
+The item wrapper placed inside a `<Columns>` container. Supports custom column spanning and sticky scroll behavior.
+
+<Tabs>
+  <Tab title="Output">
+    <Columns cols={3}>
+      <Column span={2}>
+        ### Extended Column This column spans across 2 grid slots on desktop
+        screens.
+      </Column>
+      <Column>### Single Column Standard column size.</Column>
+    </Columns>
+  </Tab>
+  <Tab title="Code">
+    ````mdx
+    <Columns cols={3}>
+      <Column span={2}>
+        ### Extended Column This column spans across 2 grid slots on desktop
+        screens.
+      </Column>
+      <Column>### Single Column Standard column size.</Column>
+    </Columns>
+    ````
+  </Tab>
+</Tabs>
+
+### Sticky Positioning
+
+Enable `sticky` positioning to keep code snippets, navigation cards, or secondary controls pinned near the top of the viewport as users scroll through long documentation:
+
+<Tabs>
+
+  <Tab title="Output">
+    <Columns cols={2}>
+      <Column>
+        ### Step-by-Step Guide
+        Long explanatory documentation text goes here...
+      </Column>
+      <Column sticky>
+        ```typescript
+        // Sticky Code Preview
+        const config = { sticky: true };
+        ```
+      </Column>
+    </Columns>
+  </Tab>
+  <Tab title="Code">
+````mdx
+<Columns cols={2}>
+  <Column>
+    ### Step-by-Step Guide
+    Long explanatory documentation text goes here...
+  </Column>
+  <Column sticky>
+    ```typescript
+    // Sticky Code Preview
+    const config = { sticky: true };
+    ```
+  </Column>
+</Columns>
+````
+  </Tab>
+
+</Tabs>
+
+---
+
+## Props
+
+### Columns (Container)
+
+| Prop       | Type                                        | Required |  Default  | Description                                                                                  |
+| :--------- | :------------------------------------------ | :------: | :-------: | :------------------------------------------------------------------------------------------- |
+| `cols`     | `number \| string`                          |    No    |    `2`    | Number of columns on desktop (`1`, `2`, `3`, or `4` supported).                              |
+| `gap`      | `string`                                    |    No    | `"gap-6"` | Tailwind CSS gap class for horizontal and vertical grid spacing (e.g. `"gap-4"`, `"gap-8"`). |
+| `align`    | `"start" \| "center" \| "end" \| "stretch"` |    No    | `"start"` | Vertical cross-axis alignment of columns inside the grid.                                    |
+| `children` | `React.ReactNode`                           | **Yes**  |     —     | One or more `<Column>` components or HTML/MDX elements.                                      |
+
+### Column (Item)
+
+| Prop       | Type               | Required |   Default   | Description                                                                               |
+| :--------- | :----------------- | :------: | :---------: | :---------------------------------------------------------------------------------------- |
+| `span`     | `number \| string` |    No    | `undefined` | Number of desktop grid columns to span (applies `lg:col-span-${span}`).                   |
+| `sticky`   | `boolean`          |    No    |   `false`   | When `true`, pins the column near top of the viewport on desktop (`lg:sticky lg:top-24`). |
+| `children` | `React.ReactNode`  | **Yes**  |      —      | Content rendered inside the column container.                                             |
+
+---
+
+## Responsive Breakpoints
+
+Columns automatically stack vertically into a single column on mobile screens and expand into multi-column layouts on larger viewports:
+
+| `cols` Prop | Mobile (< 768px) | Tablet (768px – 1023px) | Desktop (≥ 1024px) | CSS Grid Class Applied                      |
+| :---------: | :--------------: | :---------------------: | :----------------: | :------------------------------------------ |
+|     `1`     |     1 Column     |        1 Column         |      1 Column      | `grid-cols-1`                               |
+|     `2`     |     1 Column     |        1 Column         |   **2 Columns**    | `grid-cols-1 lg:grid-cols-2`                |
+|     `3`     |     1 Column     |        1 Column         |   **3 Columns**    | `grid-cols-1 lg:grid-cols-3`                |
+|     `4`     |     1 Column     |      **2 Columns**      |   **4 Columns**    | `grid-cols-1 md:grid-cols-2 lg:grid-cols-4` |
+
+---
+
+## Usage Notes & Best Practices
+
+- You can use dot-notation `<Columns.Column>` as a direct static attachment instead of importing `Column` separately.
+- Always combine `sticky` with `align="start"` on the `<Columns>` parent container so child columns can scroll independently.
+- When placing code blocks inside columns, ensure long lines wrap or scroll horizontally to maintain layout integrity.

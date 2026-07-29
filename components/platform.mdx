@@ -1,0 +1,293 @@
+---
+title: Platform
+description: Conditionally render OS-specific content, platform selectors, and customizable download buttons using Platform, PlatformSelector, and Download components.
+---
+
+## Overview
+
+The `Platform` component lets you show different content to users based on their operating system.
+
+Wrap any MDX content—code blocks, notes, images, download buttons, tables, and more—and Viabl automatically shows the correct content for each visitor. Add a `<PlatformSelector />` anywhere on the page to let users manually switch platforms.
+
+- **Platform**: Conditionally renders content for specific operating systems.
+- **PlatformSelector**: An interactive switcher for users to manually change operating systems.
+- **Download**: Automatically renders a platform-aware download button with customizable styling and an optional platform switcher beside it.
+
+---
+
+## Basic Usage
+
+<Tabs>
+  <Tab title="Output">
+    <PlatformSelector variant="dropdown" />
+
+    <Platform on="windows">
+
+```powershell
+winget install myapp
+```
+
+    </Platform>
+
+    <Platform on="mac">
+
+```bash
+brew install myapp
+```
+
+    </Platform>
+
+    <Platform on="linux">
+
+```bash
+curl -fsSL https://get.myapp.dev | sh
+```
+
+    </Platform>
+
+  </Tab>
+  <Tab title="Code">
+`````mdx
+<PlatformSelector variant="dropdown" />
+
+<Platform on="windows">
+
+```powershell
+winget install myapp
+```
+
+</Platform>
+
+<Platform on="mac">
+
+```bash
+brew install myapp
+```
+
+</Platform>
+
+<Platform on="linux">
+
+```bash
+curl -fsSL https://get.myapp.dev | sh
+```
+
+</Platform>
+`````
+  </Tab>
+</Tabs>
+
+The visitor's operating system is detected automatically from the browser. A user on macOS sees only the Homebrew command, while the Windows and Linux instructions remain hidden.
+
+---
+
+## Supported Platforms
+
+| Platform  | Description                                         |
+| :-------- | :-------------------------------------------------- |
+| `windows` | Shown to Windows users.                             |
+| `mac`     | Shown to macOS users.                               |
+| `linux`   | Shown to Linux users.                               |
+| `unknown` | Shown when the operating system cannot be detected. |
+
+---
+
+## PlatformSelector
+
+You can place `<PlatformSelector />`:
+
+- At the top of the page before installation instructions.
+- Inline between sections.
+- Multiple times on the same page. All selectors stay synchronized.
+
+When users select a platform, every `Platform` block on the page updates simultaneously, and the selected platform persists across pages.
+
+<Tabs>
+  <Tab title="Output">
+    <PlatformSelector variant="tabs" />
+  </Tab>
+  <Tab title="Code">
+    `````mdx
+    <PlatformSelector variant="tabs" />
+    `````
+  </Tab>
+</Tabs>
+
+**Dropdown Variant**
+
+<Tabs>
+  <Tab title="Output">
+    <PlatformSelector variant="dropdown" />
+  </Tab>
+  <Tab title="Code">
+    `````mdx
+    <PlatformSelector variant="dropdown" />
+    `````
+  </Tab>
+</Tabs>
+
+---
+
+## Targeting Multiple Platforms
+
+Pass an array to `on` when multiple platforms share the same content:
+
+<Tabs>
+  <Tab title="Output">
+    <Platform on={["mac", "linux"]}>
+      The config file lives at `~/.config/myapp/config.yaml`.
+    </Platform>
+
+    <Platform on="windows">
+      The config file lives at `%APPDATA%\myapp\config.yaml`.
+    </Platform>
+
+  </Tab>
+  <Tab title="Code">
+`````mdx
+<Platform on={["mac", "linux"]}>
+  The config file lives at `~/.config/myapp/config.yaml`.
+</Platform>
+
+<Platform on="windows">
+  The config file lives at `%APPDATA%\myapp\config.yaml`.
+</Platform>
+`````
+  </Tab>
+</Tabs>
+
+---
+
+## Download Button Customization
+
+The `Download` component automatically renders a platform-aware download button and switcher. You can fully customize button variants (`"block"`, `"outline"`, `"soft"`, `"ghost"`), colors, sizes, corner radius, and icons.
+
+### Button Style Variants
+
+<Tabs>
+  <Tab title="Output">
+    <Download
+      windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+      mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+      linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+      style="block"
+    />
+
+    <Download
+      windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+      mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+      linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+      style="outline"
+    />
+
+    <Download
+      windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+      mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+      linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+      style="soft"
+    />
+
+  </Tab>
+  <Tab title="Code">
+`````mdx
+{/* Block Filled Button */}
+<Download
+  windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+  mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+  linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+  style="block"
+/>
+
+{/* Outlined Button */}
+
+<Download
+  windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+  mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+  linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+  style="outline"
+/>
+
+{/* Soft Tinted Button */}
+
+<Download
+  windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+  mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+  linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+  style="soft"
+/>
+`````
+  </Tab>
+</Tabs>
+
+### Custom Colors & Icons
+
+Pass custom hex or CSS color strings to `color` and `textColor`, and specify any Lucide icon name:
+
+<Tabs>
+  <Tab title="Output">
+    <Download
+      windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+      mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+      linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+      color="#0064e0"
+      icon="DownloadCloud"
+      size="sm"
+      radius="md"
+    />
+  </Tab>
+  <Tab title="Code">
+    `````mdx
+    <Download
+      windows="https://github.com/your-org/app/releases/download/v1.0/app.exe"
+      mac="https://github.com/your-org/app/releases/download/v1.0/app.dmg"
+      linux="https://github.com/your-org/app/releases/download/v1.0/app.AppImage"
+      color="#10B981"
+      icon="DownloadCloud"
+      size="lg"
+      radius="full"
+    />
+    `````
+  </Tab>
+</Tabs>
+
+---
+
+## Props
+
+**Platform**
+
+The `Platform` component accepts the following props.
+
+| Prop       | Type                                                  | Description                                                       |
+| :--------- | :---------------------------------------------------- | :---------------------------------------------------------------- |
+| `on`       | `"windows" \| "mac" \| "linux" \| "unknown"` or array | The platform(s) for which the wrapped content should be rendered. |
+| `children` | `React.ReactNode`                                     | Content displayed when the active OS matches the `on` prop.       |
+
+**PlatformSelector**
+
+The `PlatformSelector` component accepts the following props.
+
+| Prop        | Type                                | Default  | Description                                               |
+| :---------- | :---------------------------------- | :------- | :-------------------------------------------------------- |
+| `variant`   | `"tabs" \| "dropdown"`              | `"tabs"` | Controls the visual appearance of the selector.           |
+| `platforms` | `("windows" \| "mac" \| "linux")[]` | All      | Restricts which platforms appear in the selector options. |
+| `className` | `string`                            | `""`     | Additional CSS class names.                               |
+
+**Download**
+
+The `Download` component accepts the following props.
+
+| Prop        | Type                                        | Default               | Description                                                            |
+| :---------- | :------------------------------------------ | :-------------------- | :--------------------------------------------------------------------- |
+| `windows`   | `string`                                    | —                     | Download URL for Windows users.                                        |
+| `mac`       | `string`                                    | —                     | Download URL for macOS users.                                          |
+| `linux`     | `string`                                    | —                     | Download URL for Linux users.                                          |
+| `default`   | `string`                                    | —                     | Fallback URL used when the platform cannot be detected.                |
+| `label`     | `string`                                    | `"Download for {OS}"` | Custom button label text.                                              |
+| `style`     | `"block" \| "outline" \| "soft" \| "ghost"` | `"block"`             | Visual style variant (`"block"`, `"outline"`, `"soft"`, or `"ghost"`). |
+| `color`     | `string`                                    | Accent color          | Custom background or accent color (e.g. `"#10B981"` or `"#8B5CF6"`).   |
+| `textColor` | `string`                                    | Auto                  | Custom button text color.                                              |
+| `size`      | `"sm" \| "md" \| "lg"`                      | `"md"`                | Button size scaling (`"sm"`, `"md"`, or `"lg"`).                       |
+| `radius`    | `"none" \| "sm" \| "md" \| "lg" \| "full"`  | `"md"`                | Corner border radius (`"none"`, `"sm"`, `"md"`, `"lg"`, or `"full"`).  |
+| `icon`      | `string`                                    | `"Download"`          | Lucide icon name (e.g. `"DownloadCloud"`, `"ArrowDown"`).              |
+| `switcher`  | `"tabs" \| "dropdown"`                      | `"dropdown"`          | The style of the platform selector displayed beside the button.        |

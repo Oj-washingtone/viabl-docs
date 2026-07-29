@@ -80,7 +80,9 @@
                     "quickstart/pages",
                     "quickstart/navigation",
                     "quickstart/seo",
-                    "quickstart/ai-assistant"
+                    "quickstart/ai-assistant",
+                    "quickstart/page-layout",
+                    "quickstart/announcement-banner"
                 ]
             },
             {
@@ -89,6 +91,7 @@
                 "pages": [
                     "components/overview",
                     "components/cards",
+                    "components/column",
                     "components/steps",
                     "components/accordion",
                     "components/tabs",
@@ -98,7 +101,10 @@
                     "components/tooltip",
                     "components/expandable",
                     "components/update",
-                    "components/response-fields"
+                    "components/response-fields",
+                    "components/platform",
+                    "components/color",
+                    "components/tree"
                 ]
             },
             {
@@ -150,16 +156,6 @@
             "description": "Ship Documentation easily with viabl",
             "image": "/images/hero-white.png"
         }
-    },
-    "ai": {
-        "provider": "anthropic",
-        "apiKey": "${ANTHROPIC_API_KEY}",
-        "suggestedQuestions": [
-            "How do i get started with viabl?",
-            "How can i configure and customize my docs ?",
-            "How do i deploy my docs ?"
-        ],
-        "rules": []
     },
     "feedback": {
         "thumbsRating": true,
