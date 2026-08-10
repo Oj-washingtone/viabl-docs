@@ -1,151 +1,230 @@
 ---
 title: API Reference
-description: Document your API using OpenAPI specifications in Viabl.
+description: Render interactive API reference documentation, auto-generated endpoint pages, or hybrid MDX pages directly from your OpenAPI specification.
 ---
 
-Viabl can render a beautiful, interactive API reference directly from your OpenAPI specification. Point to your spec file in page frontmatter and Viabl handles the rest — endpoints, parameters, request and response schemas, and authentication are all rendered automatically.
+Viabl renders beautiful, interactive API documentation directly from your OpenAPI specifications. Point to your spec file in `docs.json` or page frontmatter, and Viabl automatically renders endpoints, parameters, request and response schemas, code snippets, and interactive API runners.
 
-## Quick start
-
-Place your OpenAPI spec at the root of your docs project:
-
-```
-my-docs/
-├── docs.json
-├── introduction.mdx
-└── openapi.yaml       ← your spec file
-```
-
-Create an MDX page and point to it using the `openapi` frontmatter field:
-
-```mdx
 ---
-title: API Reference
-openapi: /openapi.yaml
----
-```
 
-Register the page in your `docs.json` navigation:
+## Generating Endpoint Pages
 
-```json
-"navigation": [
-  {
-    "group": "Getting Started",
-    "pages": ["introduction"]
-  },
-  {
-    "group": "API Reference",
-    "pages": ["api-reference"]
-  }
-]
-```
+Update your `docs.json` to reference your OpenAPI specification. You can generate pages for all endpoints in your spec, or select specific endpoints.
 
-That is all. Viabl reads your spec and renders the full API reference on that page.
+### Generating all endpoint pages
 
-## Supported formats
-
-Both YAML and JSON spec files are supported:
-
-```mdx
----
-title: API Reference
-openapi: /openapi.yaml
----
-```
-
-```mdx
----
-title: API Reference
-openapi: /openapi.json
----
-```
-
-Place the file anywhere in your project root and reference it with an absolute path from the root.
-
-## Filtering by tag
-
-For large APIs it is cleaner to split the reference into multiple pages — one per tag. Use the `openapiTag` frontmatter field to filter the spec to a specific tag:
-
-```mdx
----
-title: Users
-openapi: /openapi.yaml
-openapiTag: Users
----
-```
-
-```mdx
----
-title: Projects
-openapi: /openapi.yaml
-openapiTag: Projects
----
-```
-
-Each page renders only the endpoints matching that tag. Register them individually in your navigation:
+To automatically generate pages for all endpoints in your OpenAPI specification, add an `openapi` property to any navigation group element:
 
 ```json
 {
-  "group": "API Reference",
-  "pages": [
-    "api-reference/overview",
-    "api-reference/users",
-    "api-reference/projects",
-    "api-reference/billing"
+  "navigation": [
+    {
+      "group": "API reference",
+      "openapi": "openapi.json"
+    }
   ]
 }
 ```
 
-<Tip>
-  Tag your endpoints in the spec itself using the `tags` field on each operation. The `openapiTag` value must match the tag name exactly.
-</Tip>
+Viabl parses your spec, groups endpoints by tag, and automatically generates individual single endpoint pages for every route.
 
-## Frontmatter fields
+### Generating specific endpoint pages
 
-<ResponseField name="openapi" type="string">
-  Path to your OpenAPI spec file relative to the project root. Supports both `.yaml` and `.json` formats.
+To generate pages for only specific endpoints, list the target endpoints in the `pages` array of the navigation element:
+
+```json
+{
+  "navigation": [
+    {
+      "group": "API reference",
+      "openapi": "openapi.json",
+      "pages": ["GET /users", "POST /users", "POST /gallery/upload"]
+    }
+  ]
+}
+```
+
+Only the endpoints explicitly listed in the `pages` array will be rendered in the navigation tree.
+
+---
+
+## Hybrid MDX + OpenAPI Pages
+
+You can write custom prose, prerequisites, diagrams, and warnings directly inside a physical `.mdx` file while attaching a specific OpenAPI endpoint to the page.
+
+Set the `openapi` field in your page frontmatter to an HTTP method and path string:
 
 ```mdx
 ---
+title: Upload Gallery Images
+openapi: "POST /gallery/upload"
+---
 
-title: API Reference
-openapi: /openapi.yaml
+## Overview & Prerequisites
 
+Before calling this endpoint, ensure you have obtained an **Album Token** from the developer dashboard.
+
+> [!WARNING]
+> Maximum upload size is **25 MB** per request. Supported image formats: `PNG`, `JPG`, `WEBP`.
+
+### Upload Workflow
+
+1. Provide the target `albumName` in the parameter form.
+2. Drag and drop or choose your image files using the dropzone.
+3. Click **Send Request** to execute the multi-part upload.
+```
+
+<Tip>
+  Unlike full-spec pages, **Hybrid MDX Pages** render your custom markdown
+  content directly in the documentation column above parameter tables and schema
+  definitions.
+</Tip>
+
+---
+
+## Filtering by Tag
+
+For large specs, you can filter full-spec pages to only display endpoints matching a specific tag using the `openapiTag` frontmatter field:
+
+```mdx
+---
+title: Users API
+openapi: /openapi.json
+openapiTag: Users
 ---
 ```
 
+```mdx
+---
+title: Projects API
+openapi: /openapi.json
+openapiTag: Projects
+---
+```
+
+Register them individually in your `docs.json` navigation:
+
+```json
+{
+  "group": "API Reference",
+  "pages": ["api-reference/users", "api-reference/projects"]
+}
+```
+
+---
+
+## Hidden Groups & Custom Layout Navigation
+
+If you want single endpoint pages to remain live and routable without appearing in the left sidebar tree, set `"hidden": true` on any navigation group in `docs.json`:
+
+```json
+{
+  "group": "Internal APIs",
+  "openapi": "openapi.json",
+  "hidden": true
+}
+```
+
+Endpoints under a hidden group remain accessible via direct URL (e.g. `/api-reference/gallery-upload`). You can then create full-width overview pages without a sidebar using `sidebar: false`:
+
+```mdx
+---
+title: API Directory
+sidebar: false
+---
+
+# API Directory
+
+Select an action below to explore its live endpoint runner:
+
+- 🚀 [Upload Gallery Images](/api-reference/gallery-upload) — Upload single or multiple images.
+- 📁 [List User Albums](/api-reference/gallery-albums) — Retrieve user albums.
+```
+
+---
+
+## Multipart Form Data & Multi-File Uploads
+
+Viabl automatically renders a sleek drag-and-drop dropzone UI for `multipart/form-data` endpoints.
+
+It supports single binary files as well as array fields for uploading multiple files (`type: array` with items `format: binary`):
+
+```yaml
+paths:
+  /gallery/upload:
+    post:
+      summary: Upload multiple gallery images
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                albumName:
+                  type: string
+                  example: "Summer Vacation 2026"
+                images:
+                  type: array
+                  description: One or more image files to upload.
+                  items:
+                    type: string
+                    format: binary
+```
+
+**Uploader Features:**
+
+- Contextual badges indicating `(file)` vs `(multiple files)`.
+- Real-time preview list with file names and size indicators.
+- One-click **Clear files** button to reset selections.
+
+---
+
+## Exporting & Developer Tools
+
+Viabl includes built-in developer tools across both API explorer and single endpoint views:
+
+- **Postman Collection Export**: Download a ready-to-import Postman v2.1.0 collection file containing all endpoints, authentication headers, and request body schemas.
+- **Quick Path Copy**: Click the copy button next to any endpoint path (`/gallery/upload`) to quickly copy it to your clipboard.
+- **Dynamic Spec Versions**: Version pills automatically display the `info.version` value defined in your spec (e.g. `v1.0.0`).
+- **Multi-Language Snippets**: Instant code snippet generation for cURL, JavaScript (Fetch/Axios), Python, Go, Java, PHP, and Ruby.
+
+---
+
+## Frontmatter Reference
+
+<ResponseField name="openapi" type="string">
+  Path to your OpenAPI spec file relative to project root (`/openapi.json`), or
+  a method and path string (`"POST /gallery/upload"`) for hybrid endpoint pages.
 </ResponseField>
 
 <ResponseField name="openapiTag" type="string">
-  Filter the spec to only show endpoints matching this tag. The value must match a tag name defined in your spec exactly — it is case sensitive.
-
-```mdx
----
-
-title: Users API
-openapi: /openapi.yaml
-openapiTag: Users
-
----
-```
-
+  Filter full spec pages to only show endpoints matching this tag (case
+  sensitive).
 </ResponseField>
 
-<Warning>
-  When `openapi` is set in frontmatter, any MDX content below the frontmatter block is ignored. The entire page body is replaced by the rendered API reference.
-</Warning>
+<ResponseField name="sidebar" type="boolean">
+  Set `sidebar: false` to hide the left navigation sidebar and enable full-width
+  content layouts.
+</ResponseField>
 
-## Example spec structure
+<ResponseField name="layout" type="string">
+  Set layout mode: `"default"`, `"full"`, `"landing"`, or `"api"`.
+</ResponseField>
 
-A minimal OpenAPI spec that works well with Viabl:
+---
+
+## Example Spec Structure
+
+A complete OpenAPI 3.0.3 spec demonstrating authentication, schemas, and multi-file upload endpoints:
 
 ```yaml
 openapi: 3.0.3
 
 info:
-  title: My API
-  description: API documentation for My Product
-  version: 1.0.0
+  title: Gallery & User API
+  description: Complete API documentation for Viabl Gallery Services
+  version: 2.1.0
 
 servers:
   - url: https://api.example.com/v1
@@ -154,45 +233,37 @@ servers:
 tags:
   - name: Users
     description: User management endpoints
-  - name: Projects
-    description: Project management endpoints
+  - name: Gallery
+    description: Gallery and media upload endpoints
 
 paths:
-  /users:
-    get:
-      tags: [Users]
-      summary: List users
-      description: Returns a paginated list of all users.
-      parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            default: 1
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 20
+  /gallery/upload:
+    post:
+      tags: [Gallery]
+      summary: Upload multiple gallery images
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                albumName:
+                  type: string
+                  example: "Summer Vacation 2026"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
       responses:
         "200":
-          description: A list of users
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/User"
-                  total:
-                    type: integer
+          description: Upload successful
 
   /users/{id}:
     get:
       tags: [Users]
-      summary: Get a user
+      summary: Get a user profile
       parameters:
         - name: id
           in: path
@@ -201,13 +272,11 @@ paths:
             type: string
       responses:
         "200":
-          description: The user
+          description: User profile payload
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "404":
-          description: User not found
 
 components:
   schemas:
@@ -221,12 +290,6 @@ components:
           type: string
           format: email
           example: jane@example.com
-        name:
-          type: string
-          example: Jane Smith
-        createdAt:
-          type: string
-          format: date-time
 
   securitySchemes:
     bearerAuth:
@@ -238,84 +301,21 @@ security:
   - bearerAuth: []
 ```
 
-## Mixing API and prose pages
-
-You can mix OpenAPI pages with regular MDX pages in the same navigation group. A common pattern is to have an overview page followed by the API reference:
-
-```json
-{
-  "group": "API Reference",
-  "pages": [
-    "api-reference/overview",
-    "api-reference/authentication",
-    "api-reference/errors",
-    "api-reference/users",
-    "api-reference/projects"
-  ]
-}
-```
-
-Where `overview.mdx`, `authentication.mdx`, and `errors.mdx` are regular MDX pages covering concepts, and `users.mdx` and `projects.mdx` are OpenAPI pages using the `openapi` frontmatter field.
-
-## Authentication
-
-Define authentication schemes in your spec using `securitySchemes` and Viabl renders them automatically in the API reference:
-
-```yaml
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    apiKey:
-      type: apiKey
-      in: header
-      name: X-API-Key
-
-security:
-  - bearerAuth: []
-```
-
-You can also apply security schemes per endpoint to override the global setting:
-
-```yaml
-paths:
-  /public/status:
-    get:
-      summary: Health check
-      security: [] # ← no auth required for this endpoint
-```
-
-## Multiple spec files
-
-You can use different spec files on different pages — useful when you have multiple APIs or versioned specs:
-
-```mdx
 ---
-title: v1 API Reference
-openapi: /openapi-v1.yaml
----
-```
 
-```mdx
----
-title: v2 API Reference
-openapi: /openapi-v2.yaml
----
-```
+## What Gets Rendered
 
-Both files should be placed at the project root.
-
-## What gets rendered
-
-Viabl renders the following from your OpenAPI spec:
-
-<Check>All endpoints grouped by tag</Check>
-<Check>HTTP method and path for each endpoint</Check>
-<Check>Summary and description</Check>
-<Check>Path, query, header, and cookie parameters</Check>
-<Check>Request body schema with field types and descriptions</Check>
-<Check>Response schemas for all status codes</Check>
-<Check>Authentication requirements</Check>
-<Check>Example values from the spec</Check>
+<Check>
+  All endpoints auto-generated or selectively filtered via docs.json
+</Check>
+<Check>
+  Hybrid MDX pages combining custom markdown prose with live endpoint runners
+</Check>
+<Check>Interactive multi-file and single-file upload dropzones</Check>
+<Check>One-click Postman v2.1.0 collection downloads</Check>
+<Check>Quick path copy button next to endpoint headers</Check>
+<Check>Hidden OpenAPI navigation groups via "hidden": true in docs.json</Check>
+<Check>
+  Multi-language client code snippets (cURL, Fetch, Axios, Python, Go, Java)
+</Check>
+<Check>Live parameter forms and response schema preview</Check>
